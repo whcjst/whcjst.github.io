@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://whc.dropsec.xyz/"/>
-  <updated>2017-07-31T03:29:54.233Z</updated>
+  <updated>2017-11-20T12:01:13.809Z</updated>
   <id>http://whc.dropsec.xyz/</id>
   
   <author>
@@ -15,6 +15,26 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>关于Liunx提权的思考</title>
+    <link href="http://whc.dropsec.xyz/2017/08/10/%E5%85%B3%E4%BA%8ELinux%E6%8F%90%E6%9D%83%E7%9A%84%E6%80%9D%E8%80%83/"/>
+    <id>http://whc.dropsec.xyz/2017/08/10/关于Linux提权的思考/</id>
+    <published>2017-08-10T11:57:49.000Z</published>
+    <updated>2017-11-20T12:01:13.809Z</updated>
+    
+    <content type="html"><![CDATA[<p><a href="http://www.freebuf.com/articles/system/129549.html" target="_blank" rel="external">http://www.freebuf.com/articles/system/129549.html</a></p><p>2个思路，一个是直接用提权的exp，一种是看看shadow文件可不可读，可读就直接爆破</p><p>提权exp整理<br><a href="http://exploit.linuxnote.org/" target="_blank" rel="external">http://exploit.linuxnote.org/</a><br><a href="https://github.com/SecWiki/linux-kernel-exploits" target="_blank" rel="external">https://github.com/SecWiki/linux-kernel-exploits</a></p><a id="more"></a><h3 id="一、提权"><a href="#一、提权" class="headerlink" title="一、提权"></a>一、提权</h3><p>两个在靶机本地运行的脚步</p><ul><li>LinEnum</li></ul><p>git clone <a href="https://github.com/rebootuser/LinEnum.git" target="_blank" rel="external">https://github.com/rebootuser/LinEnum.git</a></p><p>直接运行sh脚本就行了， ./LinEnum.sh</p><ul><li>Linux Exploit Suggester</li></ul><p>注意是perl写的，所以需要有环境</p><p>git clone <a href="https://github.com/PenturaLabs/Linux_Exploit_Suggester.git" target="_blank" rel="external">https://github.com/PenturaLabs/Linux_Exploit_Suggester.git</a></p><p>攻击机kali</p><ul><li>exp-db</li></ul><p>searchsploit </p><h3 id="二、明文root密码提权"><a href="#二、明文root密码提权" class="headerlink" title="二、明文root密码提权"></a>二、明文root密码提权</h3><p>遇到的概率很小</p><p>大多linux系统的密码都和/etc/passwd和/etc/shadow这两个配置文件息息相关。passwd里面储存了用户，shadow里面是密码的hash。出于安全考虑passwd是全用户可读，root可写的。shadow是仅root可读写的。</p><p>这里是一个典型的passwd文件</p><pre><code>root:x:0:0:root:/root:/bin/bashdaemon:x:1:1:daemon:usr/sbin:/bin/shbin:x:2:2:bin:/bin:/binshsys:x:3:3:sys:/dev:/bin/shsync:x:4:65534:sync:/bin:bin/syncgames:x:5:60:games:/usr/games:/binshman:x:6:12:man:/var/cache/man:/bin/shlp:x:7:7:lp:var/spool/lpd:/bin/shmail:x:8:8:mail:/var/mail:/binshnews:x:9:9:news:/var/spool/news:/binshuucp:x:10:10:uucp:/var/spool/uucp:/binshproxy:x:13:13:proxy:/bin:/bin/shwww-data:x:33:33:www-data:/var/www:/binshbackup:x:34:34:backup:/var/backups:/binshlist:x:38:38:Mailing List Manager:/var/list:/bin/shirc:x:39:39:ircd:/var/run/ircd:/binshnobody:x:65534:65534:nobody:/nonexistent:/binshibuuid:x:100:101::/var/lib/libuuid:/bin/shsyslog:x:101:103::/home/syslog:/binfalsesshd:x:104:65534::/var/run/sshd:/usr/sbin/nologin</code></pre><p>passwd由冒号分割，第一列是用户名，第二列是密码，x代表密码hash被放在shadow里面了（这样非root就看不到了）。而shadow里面最重要的就是密码的hash</p>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;&lt;a href=&quot;http://www.freebuf.com/articles/system/129549.html&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;http://www.freebuf.com/articles/system/129549.html&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;2个思路，一个是直接用提权的exp，一种是看看shadow文件可不可读，可读就直接爆破&lt;/p&gt;
+&lt;p&gt;提权exp整理&lt;br&gt;&lt;a href=&quot;http://exploit.linuxnote.org/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;http://exploit.linuxnote.org/&lt;/a&gt;&lt;br&gt;&lt;a href=&quot;https://github.com/SecWiki/linux-kernel-exploits&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;https://github.com/SecWiki/linux-kernel-exploits&lt;/a&gt;&lt;/p&gt;
+    
+    </summary>
+    
+    
+  </entry>
   
   <entry>
     <title>PHPok后台getshell分析</title>
