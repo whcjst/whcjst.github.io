@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://whc.dropsec.xyz/"/>
-  <updated>2017-11-20T12:01:13.809Z</updated>
+  <updated>2017-11-23T08:23:52.458Z</updated>
   <id>http://whc.dropsec.xyz/</id>
   
   <author>
@@ -17,11 +17,34 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>关于后生渗透利器koadic的一些思考</title>
+    <link href="http://whc.dropsec.xyz/2017/11/23/%E5%85%B3%E4%BA%8E%E5%90%8E%E7%94%9F%E6%B8%97%E9%80%8F%E5%88%A9%E5%99%A8koadic%E7%9A%84%E4%B8%80%E4%BA%9B%E6%80%9D%E8%80%83/"/>
+    <id>http://whc.dropsec.xyz/2017/11/23/关于后生渗透利器koadic的一些思考/</id>
+    <published>2017-11-23T08:21:34.000Z</published>
+    <updated>2017-11-23T08:23:52.458Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="文章起因"><a href="#文章起因" class="headerlink" title="文章起因"></a>文章起因</h2><p>作为一个最近在学习js远控的萌新，在学习beef过程中碰到了许多问题，然后就请教在做ctf认识的小伙伴，小伙伴推荐了“大宝剑”koadic，在接触koadic之后，发现这东西真是一个对萌新特别友好的神器。本着分享即学习的原则，我就把我最近玩koadic的新的想法写成一篇文章，如果文章有任何不准确的地方，请各位大佬斧正。</p><h2 id="Koadic的基础用法"><a href="#Koadic的基础用法" class="headerlink" title="Koadic的基础用法"></a>Koadic的基础用法</h2><p>前期准备</p><pre><code># git clone https://github.com/zerosum0x0/koadic.git# cd koadic# pip install -r requirements.txt</code></pre><p>准备完成之后，基本的操作在参考文章的第一篇已经有所介绍，我就不再累述。koadic根据作者在github上的介绍，主要分为这么2个模块  </p><ul><li><strong>Stagers</strong>  </li></ul><table><thead><tr><th>Module</th><th style="text-align:center">Description</th></tr></thead><tbody><tr><td>stager/js/mshta</td><td style="text-align:center">serves payloads in memory using MSHTA.exe HTML Applications</td></tr><tr><td>stager/js/regsvr</td><td style="text-align:center">serves payloads in memory using regsvr32.exe COM+ scriptlets</td></tr><tr><td>stager/js/rundll32_js</td><td style="text-align:center">serves payloads in memory using rundll32.exe</td></tr><tr><td>stager/js/disk</td><td style="text-align:center">serves payloads using files on disk</td></tr></tbody></table><p>stagers是在你攻击机上生成的payload的种类</p><ul><li><strong>Implants</strong></li></ul><table><thead><tr><th>Module</th><th style="text-align:center">Description</th></tr></thead><tbody><tr><td>implant/elevate/bypassuac_eventvwr</td><td style="text-align:center">Uses enigma0x3’s eventvwr.exe exploit to bypass UAC on Windows 7, 8, and 10.</td></tr><tr><td>implant/elevate/bypassuac_sdclt</td><td style="text-align:center">Uses enigma0x3’s sdclt.exe exploit to bypass UAC on Windows 10.</td></tr><tr><td>implant/fun/zombie</td><td style="text-align:center">Maxes volume and opens The Cranberries YouTube in a hidden window.</td></tr><tr><td>implant/fun/voice</td><td style="text-align:center">Plays a message over text-to-speech.</td></tr><tr><td>implant/gather/clipboard</td><td style="text-align:center">Plays a message over text-to-speech.</td></tr><tr><td>implant/gather/hashdump_sam</td><td style="text-align:center">Retrieves hashed passwords from the SAM hive.</td></tr><tr><td>implant/gather/hashdump_dc</td><td style="text-align:center">Domain controller hashes from the NTDS.dit file.</td></tr><tr><td>implant/inject/mimikatz_dotnet2js</td><td style="text-align:center">Injects a reflective-loaded DLL to run powerkatz.dll (@tirannido DotNetToJS).</td></tr><tr><td>implant/inject/shellcode_excel</td><td style="text-align:center">Runs arbitrary shellcode payload (if Excel is installed).</td></tr><tr><td>implant/manage/enable_rdesktop</td><td style="text-align:center">Enables remote desktop on the target.</td></tr><tr><td>implant/manage/exec_cmd</td><td style="text-align:center">Run an arbitrary command on the target, and optionally receive the output.</td></tr><tr><td>implant/pivot/stage_wmi</td><td style="text-align:center">Hook a zombie on another machine using WMI.</td></tr><tr><td>implant/pivot/exec_psexec</td><td style="text-align:center">Run a command on another machine using psexec from sysinternals.</td></tr><tr><td>implant/scan/tcp</td><td style="text-align:center">Uses HTTP to scan open TCP ports on the target zombie LAN.</td></tr><tr><td>implant/utils/download_file</td><td style="text-align:center">Downloads a file from the target zombie.</td></tr><tr><td>implant/utils/upload_file</td><td style="text-align:center">Uploads a file from the listening server to the target zombies.</td></tr></tbody></table><p>implant是在koadic能执行的操作，想命令执行exec_cmd，上传下载文件download_file，upload_file，抓hash  hashdump_sam和hashdump_dc等等。</p><p>但是有几点补充：<br>我在本机测试的时候<br>1.用python2运行，会出现UnicodeDecodeError：ascii的错误，第一篇文章里面有了<a href="http://blog.csdn.net/qq_20125305/article/details/44562901" target="_blank" rel="external">解决方案</a><br>2.在更新过微软的补丁，bypassuac_eventvwr 和/bypassuac_sdclt win10提权均不成功，所以抓hash的一些操作不了。<br>3.在implant/fun 模块下 voice操作全部成功，但是cranberry出现AttributeError: ‘ThunderstruckImplant’ object has no attribute ‘load_script’错误，跟了一遍代码，发现不了问题，而且github上面也没有issue，很苦恼，各位大佬看出问题，可以联系小弟。</p><h2 id="结合office的DDE命令执行来钓鱼"><a href="#结合office的DDE命令执行来钓鱼" class="headerlink" title="结合office的DDE命令执行来钓鱼"></a>结合office的DDE命令执行来钓鱼</h2><p>实验环境：<br>攻击机  kali（192.168.189.137）<br>靶机    win7家庭版 （192.168.189.139）</p><p>参考第二篇参考文章，利用dde做一个带有恶意命令的word</p><p><img src="http://oohnuejim.bkt.clouddn.com/dde.png" alt=""></p><p>诱导靶机用户点击这个word，并且允许进行外部链接引用，当用户点击点击链接，我们攻击已经生成了一个session</p><p><img src="http://oohnuejim.bkt.clouddn.com/%E5%8F%8D%E5%BC%B92.png" alt=""></p><p>我们可以使用 bypassuac_evenvwr提权，提完权可以进行其他骚骚的操作<br><img src="http://oohnuejim.bkt.clouddn.com/%E6%8F%90%E6%9D%83.png" alt=""></p><p>扫描tcp端口<br><img src="http://oohnuejim.bkt.clouddn.com/tcp%E6%89%AB%E6%8F%8F.png" alt=""><br>也可以进行内网扫描（偷了个懒，扫了kaili，kali是扫不到的）<br><img src="http://oohnuejim.bkt.clouddn.com/tcp%E6%89%AB%E6%8F%8F2.png" alt=""></p><p>也可以上传文件（这个我在win10上成功了，win7上没成功）<br><img src="http://oohnuejim.bkt.clouddn.com/%E4%B8%8A%E4%BC%A02.png" alt=""><br><img src="http://oohnuejim.bkt.clouddn.com/%E4%B8%8A%E4%BC%A0.png" alt=""></p><p>功能还是挺强大的</p><h2 id="参考文章"><a href="#参考文章" class="headerlink" title="参考文章"></a>参考文章</h2><p><a href="http://www.freebuf.com/sectool/145674.html" target="_blank" rel="external">http://www.freebuf.com/sectool/145674.html</a><br><a href="http://www.freebuf.com/articles/terminal/150285.html" target="_blank" rel="external">http://www.freebuf.com/articles/terminal/150285.html</a></p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;h2 id=&quot;文章起因&quot;&gt;&lt;a href=&quot;#文章起因&quot; class=&quot;headerlink&quot; title=&quot;文章起因&quot;&gt;&lt;/a&gt;文章起因&lt;/h2&gt;&lt;p&gt;作为一个最近在学习js远控的萌新，在学习beef过程中碰到了许多问题，然后就请教在做ctf认识的小伙伴，小伙伴推荐了“大宝剑
+      
+    
+    </summary>
+    
+    
+      <category term="渗透" scheme="http://whc.dropsec.xyz/tags/%E6%B8%97%E9%80%8F/"/>
+    
+  </entry>
+  
+  <entry>
     <title>关于Liunx提权的思考</title>
     <link href="http://whc.dropsec.xyz/2017/08/10/%E5%85%B3%E4%BA%8ELinux%E6%8F%90%E6%9D%83%E7%9A%84%E6%80%9D%E8%80%83/"/>
     <id>http://whc.dropsec.xyz/2017/08/10/关于Linux提权的思考/</id>
     <published>2017-08-10T11:57:49.000Z</published>
-    <updated>2017-11-20T12:01:13.809Z</updated>
+    <updated>2017-11-20T12:03:34.583Z</updated>
     
     <content type="html"><![CDATA[<p><a href="http://www.freebuf.com/articles/system/129549.html" target="_blank" rel="external">http://www.freebuf.com/articles/system/129549.html</a></p><p>2个思路，一个是直接用提权的exp，一种是看看shadow文件可不可读，可读就直接爆破</p><p>提权exp整理<br><a href="http://exploit.linuxnote.org/" target="_blank" rel="external">http://exploit.linuxnote.org/</a><br><a href="https://github.com/SecWiki/linux-kernel-exploits" target="_blank" rel="external">https://github.com/SecWiki/linux-kernel-exploits</a></p><a id="more"></a><h3 id="一、提权"><a href="#一、提权" class="headerlink" title="一、提权"></a>一、提权</h3><p>两个在靶机本地运行的脚步</p><ul><li>LinEnum</li></ul><p>git clone <a href="https://github.com/rebootuser/LinEnum.git" target="_blank" rel="external">https://github.com/rebootuser/LinEnum.git</a></p><p>直接运行sh脚本就行了， ./LinEnum.sh</p><ul><li>Linux Exploit Suggester</li></ul><p>注意是perl写的，所以需要有环境</p><p>git clone <a href="https://github.com/PenturaLabs/Linux_Exploit_Suggester.git" target="_blank" rel="external">https://github.com/PenturaLabs/Linux_Exploit_Suggester.git</a></p><p>攻击机kali</p><ul><li>exp-db</li></ul><p>searchsploit </p><h3 id="二、明文root密码提权"><a href="#二、明文root密码提权" class="headerlink" title="二、明文root密码提权"></a>二、明文root密码提权</h3><p>遇到的概率很小</p><p>大多linux系统的密码都和/etc/passwd和/etc/shadow这两个配置文件息息相关。passwd里面储存了用户，shadow里面是密码的hash。出于安全考虑passwd是全用户可读，root可写的。shadow是仅root可读写的。</p><p>这里是一个典型的passwd文件</p><pre><code>root:x:0:0:root:/root:/bin/bashdaemon:x:1:1:daemon:usr/sbin:/bin/shbin:x:2:2:bin:/bin:/binshsys:x:3:3:sys:/dev:/bin/shsync:x:4:65534:sync:/bin:bin/syncgames:x:5:60:games:/usr/games:/binshman:x:6:12:man:/var/cache/man:/bin/shlp:x:7:7:lp:var/spool/lpd:/bin/shmail:x:8:8:mail:/var/mail:/binshnews:x:9:9:news:/var/spool/news:/binshuucp:x:10:10:uucp:/var/spool/uucp:/binshproxy:x:13:13:proxy:/bin:/bin/shwww-data:x:33:33:www-data:/var/www:/binshbackup:x:34:34:backup:/var/backups:/binshlist:x:38:38:Mailing List Manager:/var/list:/bin/shirc:x:39:39:ircd:/var/run/ircd:/binshnobody:x:65534:65534:nobody:/nonexistent:/binshibuuid:x:100:101::/var/lib/libuuid:/bin/shsyslog:x:101:103::/home/syslog:/binfalsesshd:x:104:65534::/var/run/sshd:/usr/sbin/nologin</code></pre><p>passwd由冒号分割，第一列是用户名，第二列是密码，x代表密码hash被放在shadow里面了（这样非root就看不到了）。而shadow里面最重要的就是密码的hash</p>]]></content>
     
@@ -33,6 +56,8 @@
     
     </summary>
     
+    
+      <category term="工具" scheme="http://whc.dropsec.xyz/tags/%E5%B7%A5%E5%85%B7/"/>
     
   </entry>
   
