@@ -105,13 +105,13 @@
 
 
 
-<meta name="description" content="在最近CTF学习过程中，特别是sql注入（mysql）的学习中，碰到过恩多坎（“waf”）,CTF的waf不是特别的强大，比如说在联合注入中不会变态到把你的select给过滤掉，但是会过滤一些关键词。在报错注入中即使把你常用的报错函数给过滤掉了，也会留给你一线生机，就比如上次LCTF的entrance.php，过滤了information_shcema，columns，tables，databas">
+<meta name="description" content="在最近CTF学习过程中，特别是sql注入（mysql）的学习中，碰到过很多坎（“waf”）,CTF的waf不是特别的强大，比如说在联合注入中不会变态到把你的select给过滤掉，但是会过滤一些关键词。在报错注入中即使把你常用的报错函数给过滤掉了，也会留给你一线生机，就比如上次LCTF的entrance.php，过滤了information_shcema，columns，tables，databas">
 <meta name="keywords" content="SQL注入">
 <meta property="og:type" content="article">
 <meta property="og:title" content="SQL注入进阶">
 <meta property="og:url" content="http://whc.dropsec.xyz/2017/12/01/SQL注入进阶思考/index.html">
 <meta property="og:site_name" content="Ha1g0的窝">
-<meta property="og:description" content="在最近CTF学习过程中，特别是sql注入（mysql）的学习中，碰到过恩多坎（“waf”）,CTF的waf不是特别的强大，比如说在联合注入中不会变态到把你的select给过滤掉，但是会过滤一些关键词。在报错注入中即使把你常用的报错函数给过滤掉了，也会留给你一线生机，就比如上次LCTF的entrance.php，过滤了information_shcema，columns，tables，databas">
+<meta property="og:description" content="在最近CTF学习过程中，特别是sql注入（mysql）的学习中，碰到过很多坎（“waf”）,CTF的waf不是特别的强大，比如说在联合注入中不会变态到把你的select给过滤掉，但是会过滤一些关键词。在报错注入中即使把你常用的报错函数给过滤掉了，也会留给你一线生机，就比如上次LCTF的entrance.php，过滤了information_shcema，columns，tables，databas">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://112.74.59.223/image/sql_injection/Image8.png">
 <meta property="og:image" content="http://112.74.59.223/image/sql_injection/Image9.png">
@@ -120,10 +120,10 @@
 <meta property="og:image" content="http://112.74.59.223/image/sql_injection/Image11.png">
 <meta property="og:image" content="http://112.74.59.223/image/sql_injection/Image12.png">
 <meta property="og:image" content="http://112.74.59.223/image/sql_injection/Image15.png">
-<meta property="og:updated_time" content="2017-12-01T13:43:10.042Z">
+<meta property="og:updated_time" content="2017-12-01T13:47:43.890Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="SQL注入进阶">
-<meta name="twitter:description" content="在最近CTF学习过程中，特别是sql注入（mysql）的学习中，碰到过恩多坎（“waf”）,CTF的waf不是特别的强大，比如说在联合注入中不会变态到把你的select给过滤掉，但是会过滤一些关键词。在报错注入中即使把你常用的报错函数给过滤掉了，也会留给你一线生机，就比如上次LCTF的entrance.php，过滤了information_shcema，columns，tables，databas">
+<meta name="twitter:description" content="在最近CTF学习过程中，特别是sql注入（mysql）的学习中，碰到过很多坎（“waf”）,CTF的waf不是特别的强大，比如说在联合注入中不会变态到把你的select给过滤掉，但是会过滤一些关键词。在报错注入中即使把你常用的报错函数给过滤掉了，也会留给你一线生机，就比如上次LCTF的entrance.php，过滤了information_shcema，columns，tables，databas">
 <meta name="twitter:image" content="http://112.74.59.223/image/sql_injection/Image8.png">
 
 
@@ -391,7 +391,7 @@
       
 
       
-        <p>在最近CTF学习过程中，特别是sql注入（mysql）的学习中，碰到过恩多坎（“waf”）,CTF的waf不是特别的强大，比如说在联合注入中不会变态到把你的select给过滤掉，但是会过滤一些关键词。在报错注入中即使把你常用的报错函数给过滤掉了，也会留给你一线生机，就比如上次LCTF的entrance.php，过滤了information_shcema，columns，tables，database()等等，题目本意是让你把当前表下的某个字段最后一条内容给dump出来。具体的题目writeup可以看chamd5微信公众号的wp还有chebeta师傅的博客。<br>现在我把我最近学习关于sql注入的姿势分享出来，有可能不适合实战环境，大佬看了请轻喷。<br><a id="more"></a></p>
+        <p>在最近CTF学习过程中，特别是sql注入（mysql）的学习中，碰到过很多坎（“waf”）,CTF的waf不是特别的强大，比如说在联合注入中不会变态到把你的select给过滤掉，但是会过滤一些关键词。在报错注入中即使把你常用的报错函数给过滤掉了，也会留给你一线生机，就比如上次LCTF的entrance.php，过滤了information_shcema，columns，tables，database()等等，题目本意是让你把当前表下的某个字段最后一条内容给dump出来。具体的题目writeup可以看chamd5微信公众号的wp还有chebeta师傅的博客。<br>现在我把我最近学习关于sql注入的姿势分享出来，有可能不适合实战环境，大佬看了请轻喷。<br><a id="more"></a></p>
 <h2 id="不常见函数绕过waf"><a href="#不常见函数绕过waf" class="headerlink" title="不常见函数绕过waf"></a>不常见函数绕过waf</h2><p>有时候在CTF中，出题者的waf不会把waf写死，可以多fuzz几个函数。<br>比如下面的这些函数，这些函数均为MySQL中的空间数据类型的函数，要求几何字段非空。</p>
 <ul>
 <li>SQL空间计算函数</li>
