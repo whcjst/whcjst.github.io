@@ -89,7 +89,7 @@
 <link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="渗透," />
+  <meta name="keywords" content="SQL注入," />
 
 
 
@@ -105,26 +105,26 @@
 
 
 
-<meta name="description" content="文章起因作为一个最近在学习js远控的萌新，在学习beef过程中碰到了许多问题，然后就请教在做ctf认识的小伙伴，小伙伴推荐了“大宝剑”koadic，在接触koadic之后，发现这东西真是一个对萌新特别友好的神器。本着分享即学习的原则，我就把我最近玩koadic的新的想法写成一篇文章，如果文章有任何不准确的地方，请各位大佬斧正。">
-<meta name="keywords" content="渗透">
+<meta name="description" content="在最近CTF学习过程中，特别是sql注入（mysql）的学习中，碰到过恩多坎（“waf”）,CTF的waf不是特别的强大，比如说在联合注入中不会变态到把你的select给过滤掉，但是会过滤一些关键词。在报错注入中即使把你常用的报错函数给过滤掉了，也会留给你一线生机，就比如上次LCTF的entrance.php，过滤了information_shcema，columns，tables，databas">
+<meta name="keywords" content="SQL注入">
 <meta property="og:type" content="article">
-<meta property="og:title" content="关于后生渗透利器koadic的一些思考">
-<meta property="og:url" content="http://whc.dropsec.xyz/2017/11/23/关于后生渗透利器koadic的一些思考/index.html">
+<meta property="og:title" content="SQL注入进阶">
+<meta property="og:url" content="http://whc.dropsec.xyz/2017/12/01/SQL注入进阶思考/index.html">
 <meta property="og:site_name" content="Ha1g0的窝">
-<meta property="og:description" content="文章起因作为一个最近在学习js远控的萌新，在学习beef过程中碰到了许多问题，然后就请教在做ctf认识的小伙伴，小伙伴推荐了“大宝剑”koadic，在接触koadic之后，发现这东西真是一个对萌新特别友好的神器。本着分享即学习的原则，我就把我最近玩koadic的新的想法写成一篇文章，如果文章有任何不准确的地方，请各位大佬斧正。">
+<meta property="og:description" content="在最近CTF学习过程中，特别是sql注入（mysql）的学习中，碰到过恩多坎（“waf”）,CTF的waf不是特别的强大，比如说在联合注入中不会变态到把你的select给过滤掉，但是会过滤一些关键词。在报错注入中即使把你常用的报错函数给过滤掉了，也会留给你一线生机，就比如上次LCTF的entrance.php，过滤了information_shcema，columns，tables，databas">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="http://oohnuejim.bkt.clouddn.com/dde.png">
-<meta property="og:image" content="http://oohnuejim.bkt.clouddn.com/%E5%8F%8D%E5%BC%B92.png">
-<meta property="og:image" content="http://oohnuejim.bkt.clouddn.com/%E6%8F%90%E6%9D%83.png">
-<meta property="og:image" content="http://oohnuejim.bkt.clouddn.com/tcp%E6%89%AB%E6%8F%8F.png">
-<meta property="og:image" content="http://oohnuejim.bkt.clouddn.com/tcp%E6%89%AB%E6%8F%8F2.png">
-<meta property="og:image" content="http://oohnuejim.bkt.clouddn.com/%E4%B8%8A%E4%BC%A02.png">
-<meta property="og:image" content="http://oohnuejim.bkt.clouddn.com/%E4%B8%8A%E4%BC%A0.png">
-<meta property="og:updated_time" content="2017-11-23T08:26:49.778Z">
+<meta property="og:image" content="http://112.74.59.223/image/sql_injection/Image8.png">
+<meta property="og:image" content="http://112.74.59.223/image/sql_injection/Image9.png">
+<meta property="og:image" content="http://112.74.59.223/image/sql_injection/Image14.png">
+<meta property="og:image" content="http://112.74.59.223/image/sql_injection/Image10.png">
+<meta property="og:image" content="http://112.74.59.223/image/sql_injection/Image11.png">
+<meta property="og:image" content="http://112.74.59.223/image/sql_injection/Image12.png">
+<meta property="og:image" content="http://112.74.59.223/image/sql_injection/Image15.png">
+<meta property="og:updated_time" content="2017-12-01T13:43:10.042Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="关于后生渗透利器koadic的一些思考">
-<meta name="twitter:description" content="文章起因作为一个最近在学习js远控的萌新，在学习beef过程中碰到了许多问题，然后就请教在做ctf认识的小伙伴，小伙伴推荐了“大宝剑”koadic，在接触koadic之后，发现这东西真是一个对萌新特别友好的神器。本着分享即学习的原则，我就把我最近玩koadic的新的想法写成一篇文章，如果文章有任何不准确的地方，请各位大佬斧正。">
-<meta name="twitter:image" content="http://oohnuejim.bkt.clouddn.com/dde.png">
+<meta name="twitter:title" content="SQL注入进阶">
+<meta name="twitter:description" content="在最近CTF学习过程中，特别是sql注入（mysql）的学习中，碰到过恩多坎（“waf”）,CTF的waf不是特别的强大，比如说在联合注入中不会变态到把你的select给过滤掉，但是会过滤一些关键词。在报错注入中即使把你常用的报错函数给过滤掉了，也会留给你一线生机，就比如上次LCTF的entrance.php，过滤了information_shcema，columns，tables，databas">
+<meta name="twitter:image" content="http://112.74.59.223/image/sql_injection/Image8.png">
 
 
 
@@ -152,13 +152,13 @@
 
 
 
-  <link rel="canonical" href="http://whc.dropsec.xyz/2017/11/23/关于后生渗透利器koadic的一些思考/"/>
+  <link rel="canonical" href="http://whc.dropsec.xyz/2017/12/01/SQL注入进阶思考/"/>
 
 
 
 
 
-  <title> 关于后生渗透利器koadic的一些思考 | Ha1g0的窝 </title>
+  <title> SQL注入进阶 | Ha1g0的窝 </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -297,7 +297,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://whc.dropsec.xyz/2017/11/23/关于后生渗透利器koadic的一些思考/">
+    <link itemprop="mainEntityOfPage" href="http://whc.dropsec.xyz/2017/12/01/SQL注入进阶思考/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Ha1g0">
@@ -318,7 +318,7 @@
             
             
               
-                关于后生渗透利器koadic的一些思考
+                SQL注入进阶
               
             
           </h1>
@@ -333,8 +333,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-11-23T16:21:34+08:00">
-                2017-11-23
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-12-01T15:29:22+08:00">
+                2017-12-01
               </time>
             
 
@@ -343,6 +343,28 @@
             
           </span>
 
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/CTF/" itemprop="url" rel="index">
+                    <span itemprop="name">CTF</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
           
 
           
@@ -369,131 +391,32 @@
       
 
       
-        <h2 id="文章起因"><a href="#文章起因" class="headerlink" title="文章起因"></a>文章起因</h2><p>作为一个最近在学习js远控的萌新，在学习beef过程中碰到了许多问题，然后就请教在做ctf认识的小伙伴，小伙伴推荐了“大宝剑”koadic，在接触koadic之后，发现这东西真是一个对萌新特别友好的神器。本着分享即学习的原则，我就把我最近玩koadic的新的想法写成一篇文章，如果文章有任何不准确的地方，请各位大佬斧正。<br><a id="more"></a></p>
-<h2 id="Koadic的基础用法"><a href="#Koadic的基础用法" class="headerlink" title="Koadic的基础用法"></a>Koadic的基础用法</h2><p>前期准备</p>
-<pre><code># git clone https://github.com/zerosum0x0/koadic.git
-# cd koadic
-# pip install -r requirements.txt
-</code></pre><p>准备完成之后，基本的操作在参考文章的第一篇已经有所介绍，我就不再累述。koadic根据作者在github上的介绍，主要分为这么2个模块  </p>
+        <p>在最近CTF学习过程中，特别是sql注入（mysql）的学习中，碰到过恩多坎（“waf”）,CTF的waf不是特别的强大，比如说在联合注入中不会变态到把你的select给过滤掉，但是会过滤一些关键词。在报错注入中即使把你常用的报错函数给过滤掉了，也会留给你一线生机，就比如上次LCTF的entrance.php，过滤了information_shcema，columns，tables，database()等等，题目本意是让你把当前表下的某个字段最后一条内容给dump出来。具体的题目writeup可以看chamd5微信公众号的wp还有chebeta师傅的博客。<br>现在我把我最近学习关于sql注入的姿势分享出来，有可能不适合实战环境，大佬看了请轻喷。<br><a id="more"></a></p>
+<h2 id="不常见函数绕过waf"><a href="#不常见函数绕过waf" class="headerlink" title="不常见函数绕过waf"></a>不常见函数绕过waf</h2><p>有时候在CTF中，出题者的waf不会把waf写死，可以多fuzz几个函数。<br>比如下面的这些函数，这些函数均为MySQL中的空间数据类型的函数，要求几何字段非空。</p>
 <ul>
-<li><strong>Stagers</strong>  </li>
+<li>SQL空间计算函数</li>
 </ul>
-<table>
-<thead>
-<tr>
-<th>Module</th>
-<th style="text-align:center">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>stager/js/mshta</td>
-<td style="text-align:center">serves payloads in memory using MSHTA.exe HTML Applications</td>
-</tr>
-<tr>
-<td>stager/js/regsvr</td>
-<td style="text-align:center">serves payloads in memory using regsvr32.exe COM+ scriptlets</td>
-</tr>
-<tr>
-<td>stager/js/rundll32_js</td>
-<td style="text-align:center">serves payloads in memory using rundll32.exe</td>
-</tr>
-<tr>
-<td>stager/js/disk</td>
-<td style="text-align:center">serves payloads using files on disk</td>
-</tr>
-</tbody>
-</table>
-<p>stagers是在你攻击机上生成的payload的种类</p>
+<p>| ————- |:————-:|<br>|   环    | geometrycollection() |<br>|  多点    |  multipoint() |<br>|  面      |  polygon()    |<br>|  多面     |  multipolygon() |<br>|  线   |   linestring()|<br>|  多线  | multilinestring()|</p>
+<p>我经常用的就是直接用这些函数爆出当前字段所在的库和表。</p>
+<p><img src="http://112.74.59.223/image/sql_injection/Image8.png" alt=""></p>
+<p>之前拜读了安云luan师傅一篇文章，发现用法不仅仅只有爆当前而已，还可以跟普通的注入一样，换payload来爆出想要的信息，但是有限制，在Mysql5.5的版本下可以，在之前和之后的版本都不可以</p>
+<p><img src="http://112.74.59.223/image/sql_injection/Image9.png" alt=""></p>
 <ul>
-<li><strong>Implants</strong></li>
+<li>Mysql低版本</li>
 </ul>
-<table>
-<thead>
-<tr>
-<th>Module</th>
-<th style="text-align:center">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>implant/elevate/bypassuac_eventvwr</td>
-<td style="text-align:center">Uses enigma0x3’s eventvwr.exe exploit to bypass UAC on Windows 7, 8, and 10.</td>
-</tr>
-<tr>
-<td>implant/elevate/bypassuac_sdclt</td>
-<td style="text-align:center">Uses enigma0x3’s sdclt.exe exploit to bypass UAC on Windows 10.</td>
-</tr>
-<tr>
-<td>implant/fun/zombie</td>
-<td style="text-align:center">Maxes volume and opens The Cranberries YouTube in a hidden window.</td>
-</tr>
-<tr>
-<td>implant/fun/voice</td>
-<td style="text-align:center">Plays a message over text-to-speech.</td>
-</tr>
-<tr>
-<td>implant/gather/clipboard</td>
-<td style="text-align:center">Plays a message over text-to-speech.</td>
-</tr>
-<tr>
-<td>implant/gather/hashdump_sam</td>
-<td style="text-align:center">Retrieves hashed passwords from the SAM hive.</td>
-</tr>
-<tr>
-<td>implant/gather/hashdump_dc</td>
-<td style="text-align:center">Domain controller hashes from the NTDS.dit file.</td>
-</tr>
-<tr>
-<td>implant/inject/mimikatz_dotnet2js</td>
-<td style="text-align:center">Injects a reflective-loaded DLL to run powerkatz.dll (@tirannido DotNetToJS).</td>
-</tr>
-<tr>
-<td>implant/inject/shellcode_excel</td>
-<td style="text-align:center">Runs arbitrary shellcode payload (if Excel is installed).</td>
-</tr>
-<tr>
-<td>implant/manage/enable_rdesktop</td>
-<td style="text-align:center">Enables remote desktop on the target.</td>
-</tr>
-<tr>
-<td>implant/manage/exec_cmd</td>
-<td style="text-align:center">Run an arbitrary command on the target, and optionally receive the output.</td>
-</tr>
-<tr>
-<td>implant/pivot/stage_wmi</td>
-<td style="text-align:center">Hook a zombie on another machine using WMI.</td>
-</tr>
-<tr>
-<td>implant/pivot/exec_psexec</td>
-<td style="text-align:center">Run a command on another machine using psexec from sysinternals.</td>
-</tr>
-<tr>
-<td>implant/scan/tcp</td>
-<td style="text-align:center">Uses HTTP to scan open TCP ports on the target zombie LAN.</td>
-</tr>
-<tr>
-<td>implant/utils/download_file</td>
-<td style="text-align:center">Downloads a file from the target zombie.</td>
-</tr>
-<tr>
-<td>implant/utils/upload_file</td>
-<td style="text-align:center">Uploads a file from the listening server to the target zombies.</td>
-</tr>
-</tbody>
-</table>
-<p>implant是在koadic能执行的操作，想命令执行exec_cmd，上传下载文件download_file，upload_file，抓hash  hashdump_sam和hashdump_dc等等。</p>
-<p>但是有几点补充：<br>我在本机测试的时候<br>1.用python2运行，会出现UnicodeDecodeError：ascii的错误，第一篇文章里面有了<a href="http://blog.csdn.net/qq_20125305/article/details/44562901" target="_blank" rel="external">解决方案</a><br>2.在更新过微软的补丁，bypassuac_eventvwr 和/bypassuac_sdclt win10提权均不成功，所以抓hash的一些操作不了。<br>3.在implant/fun 模块下 voice操作全部成功，但是cranberry出现AttributeError: ‘ThunderstruckImplant’ object has no attribute ‘load_script’错误，跟了一遍代码，发现不了问题，而且github上面也没有issue，很苦恼，各位大佬看出问题，可以联系小弟。</p>
-<h2 id="结合office的DDE命令执行来钓鱼"><a href="#结合office的DDE命令执行来钓鱼" class="headerlink" title="结合office的DDE命令执行来钓鱼"></a>结合office的DDE命令执行来钓鱼</h2><p>实验环境：<br>攻击机  kali（192.168.189.137）<br>靶机    win7家庭版 （192.168.189.139）</p>
-<p>参考第二篇参考文章，利用dde做一个带有恶意命令的word</p>
-<p><img src="http://oohnuejim.bkt.clouddn.com/dde.png" alt=""></p>
-<p>诱导靶机用户点击这个word，并且允许进行外部链接引用，当用户点击点击链接，我们攻击已经生成了一个session</p>
-<p><img src="http://oohnuejim.bkt.clouddn.com/%E5%8F%8D%E5%BC%B92.png" alt=""></p>
-<p>我们可以使用 bypassuac_evenvwr提权，提完权可以进行其他骚骚的操作<br><img src="http://oohnuejim.bkt.clouddn.com/%E6%8F%90%E6%9D%83.png" alt=""></p>
-<p>扫描tcp端口<br><img src="http://oohnuejim.bkt.clouddn.com/tcp%E6%89%AB%E6%8F%8F.png" alt=""><br>也可以进行内网扫描（偷了个懒，扫了kaili，kali是扫不到的）<br><img src="http://oohnuejim.bkt.clouddn.com/tcp%E6%89%AB%E6%8F%8F2.png" alt=""></p>
-<p>也可以上传文件（这个我在win10上成功了，win7上没成功）<br><img src="http://oohnuejim.bkt.clouddn.com/%E4%B8%8A%E4%BC%A02.png" alt=""><br><img src="http://oohnuejim.bkt.clouddn.com/%E4%B8%8A%E4%BC%A0.png" alt=""></p>
-<p>功能还是挺强大的</p>
-<h2 id="参考文章"><a href="#参考文章" class="headerlink" title="参考文章"></a>参考文章</h2><p><a href="http://www.freebuf.com/sectool/145674.html" target="_blank" rel="external">http://www.freebuf.com/sectool/145674.html</a><br><a href="http://www.freebuf.com/articles/terminal/150285.html" target="_blank" rel="external">http://www.freebuf.com/articles/terminal/150285.html</a></p>
+<p>NAME_CONST()</p>
+<p><img src="http://112.74.59.223/image/sql_injection/Image14.png" alt=""></p>
+<ul>
+<li>Mysql5.7新特性</li>
+</ul>
+<p>Mysql在5.7版本引入几个新函数，可用作报错注入</p>
+<p><img src="http://112.74.59.223/image/sql_injection/Image10.png" alt=""></p>
+<h2 id="别名构造（过滤当前表字段数据库名关键字）"><a href="#别名构造（过滤当前表字段数据库名关键字）" class="headerlink" title="别名构造（过滤当前表字段数据库名关键字）"></a>别名构造（过滤当前表字段数据库名关键字）</h2><p>这个在上次LCTF就碰到了，当时注到库名表名和字段名了，但是用获取最后一个字段名下的值时显示该值被过滤了，然后想到就用这个方法，利用<strong>别名构造</strong>的方法</p>
+<p>select <em> from (select 1)a,(select 2)b,(select 3)c union select </em> from users;<br><img src="http://112.74.59.223/image/sql_injection/Image11.png" alt=""></p>
+<p>select (select d.3 from (select <em> from (select 1)a,(select 2)b,(select 3)c union select </em> from users)d limit 1,1)e,(select 1)f,(select 1)g;</p>
+<p><img src="http://112.74.59.223/image/sql_injection/Image12.png" alt=""></p>
+<h2 id="join报错"><a href="#join报错" class="headerlink" title="join报错"></a>join报错</h2><p>相信CTF赛棍们对这个报错注入应该都很熟悉了，不做累述。</p>
+<p><img src="http://112.74.59.223/image/sql_injection/Image15.png" alt=""></p>
 
       
     </div>
@@ -544,7 +467,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/渗透/" rel="tag"><i class="fa fa-tag"></i> 渗透</a>
+            <a href="/tags/SQL注入/" rel="tag"><i class="fa fa-tag"></i> SQL注入</a>
           
         </div>
       
@@ -557,8 +480,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/08/10/关于Linux提权的思考/" rel="next" title="关于Liunx提权的思考">
-                <i class="fa fa-chevron-left"></i> 关于Liunx提权的思考
+              <a href="/2017/11/23/关于后渗透利器koadic的一些思考/" rel="next" title="关于后渗透利器koadic的一些思考">
+                <i class="fa fa-chevron-left"></i> 关于后渗透利器koadic的一些思考
               </a>
             
           </div>
@@ -637,7 +560,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">14</span>
+                <span class="site-state-item-count">15</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -735,7 +658,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#文章起因"><span class="nav-number">1.</span> <span class="nav-text">文章起因</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Koadic的基础用法"><span class="nav-number">2.</span> <span class="nav-text">Koadic的基础用法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#结合office的DDE命令执行来钓鱼"><span class="nav-number">3.</span> <span class="nav-text">结合office的DDE命令执行来钓鱼</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考文章"><span class="nav-number">4.</span> <span class="nav-text">参考文章</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#不常见函数绕过waf"><span class="nav-number">1.</span> <span class="nav-text">不常见函数绕过waf</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#别名构造（过滤当前表字段数据库名关键字）"><span class="nav-number">2.</span> <span class="nav-text">别名构造（过滤当前表字段数据库名关键字）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#join报错"><span class="nav-number">3.</span> <span class="nav-text">join报错</span></a></li></ol></div>
             
 
           </div>
