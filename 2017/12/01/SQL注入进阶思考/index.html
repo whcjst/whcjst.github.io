@@ -120,7 +120,7 @@
 <meta property="og:image" content="http://112.74.59.223/image/sql_injection/Image11.png">
 <meta property="og:image" content="http://112.74.59.223/image/sql_injection/Image12.png">
 <meta property="og:image" content="http://112.74.59.223/image/sql_injection/Image15.png">
-<meta property="og:updated_time" content="2017-12-01T13:47:43.890Z">
+<meta property="og:updated_time" content="2017-12-01T13:54:30.207Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="SQL注入进阶">
 <meta name="twitter:description" content="在最近CTF学习过程中，特别是sql注入（mysql）的学习中，碰到过很多坎（“waf”）,CTF的waf不是特别的强大，比如说在联合注入中不会变态到把你的select给过滤掉，但是会过滤一些关键词。在报错注入中即使把你常用的报错函数给过滤掉了，也会留给你一线生机，就比如上次LCTF的entrance.php，过滤了information_shcema，columns，tables，databas">
@@ -396,7 +396,40 @@
 <ul>
 <li>SQL空间计算函数</li>
 </ul>
-<p>| ————- |:————-:|<br>|   环    | geometrycollection() |<br>|  多点    |  multipoint() |<br>|  面      |  polygon()    |<br>|  多面     |  multipolygon() |<br>|  线   |   linestring()|<br>|  多线  | multilinestring()|</p>
+<table>
+<thead>
+<tr>
+<th>描述</th>
+<th style="text-align:center">函数</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>环</td>
+<td style="text-align:center">geometrycollection()</td>
+</tr>
+<tr>
+<td>多点</td>
+<td style="text-align:center">multipoint()</td>
+</tr>
+<tr>
+<td>面</td>
+<td style="text-align:center">polygon()</td>
+</tr>
+<tr>
+<td>多面</td>
+<td style="text-align:center">multipolygon()</td>
+</tr>
+<tr>
+<td>线</td>
+<td style="text-align:center">linestring()</td>
+</tr>
+<tr>
+<td>多线</td>
+<td style="text-align:center">multilinestring()</td>
+</tr>
+</tbody>
+</table>
 <p>我经常用的就是直接用这些函数爆出当前字段所在的库和表。</p>
 <p><img src="http://112.74.59.223/image/sql_injection/Image8.png" alt=""></p>
 <p>之前拜读了安云luan师傅一篇文章，发现用法不仅仅只有爆当前而已，还可以跟普通的注入一样，换payload来爆出想要的信息，但是有限制，在Mysql5.5的版本下可以，在之前和之后的版本都不可以</p>
