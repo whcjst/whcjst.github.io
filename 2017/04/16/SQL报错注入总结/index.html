@@ -113,20 +113,22 @@
 <meta property="og:site_name" content="Ha1g0的窝">
 <meta property="og:description" content="参考资料：http://www.waitalone.cn/mysql-error-based-injection.htmlhttp://www.111cn.net/database/mysql/47680.htm 一些基本的查基本信息的语句： 查库 (select schema_name from information_schema.schemata limit m,n) 查表 (select">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="http://i2.muimg.com/567571/348312529bf357fb.png">
-<meta property="og:image" content="http://i2.muimg.com/567571/e60e90caa6f03d2d.png">
-<meta property="og:image" content="http://i2.muimg.com/567571/29a88425dd842351.png">
-<meta property="og:image" content="http://i2.muimg.com/567571/1d69376a029682e1.png">
-<meta property="og:image" content="http://i2.muimg.com/567571/11177c1b1910f075.png">
+<meta property="og:image" content="http://oohnuejim.bkt.clouddn.com/SQL%E6%8A%A5%E9%94%99%E6%B3%A8%E5%85%A51.png">
+<meta property="og:image" content="http://oohnuejim.bkt.clouddn.com/SQL%E6%8A%A5%E9%94%99%E6%B3%A8%E5%85%A52%20.png">
+<meta property="og:image" content="http://oohnuejim.bkt.clouddn.com/SQL%E6%8A%A5%E9%94%99%E6%B3%A8%E5%85%A5rand%EF%BC%88%EF%BC%89.png">
+<meta property="og:image" content="http://oohnuejim.bkt.clouddn.com/SQL%E6%8A%A5%E9%94%99%E6%B3%A8%E5%85%A5rand%EF%BC%881%EF%BC%89.png">
+<meta property="og:image" content="http://oohnuejim.bkt.clouddn.com/SQL%E6%8A%A5%E9%94%99%E6%B3%A8%E5%85%A5rand%EF%BC%880%EF%BC%89.png">
+<meta property="og:image" content="http://oohnuejim.bkt.clouddn.com/SQL%E6%8A%A5%E9%94%99%E6%B3%A8%E5%85%A5updatexml.png">
+<meta property="og:image" content="http://oohnuejim.bkt.clouddn.com/SQL%E6%8A%A5%E9%94%99%E6%B3%A8%E5%85%A5extract.png">
 <meta property="og:image" content="http://ww4.sinaimg.cn/large/006HJ39wgy1fffdiqh36vj318u0dkajc.jpg">
 <meta property="og:image" content="http://ww4.sinaimg.cn/large/006HJ39wgy1fffdk4awm6j31830dbk0l.jpg">
-<meta property="og:image" content="http://i2.muimg.com/567571/677277689e425d96.png">
-<meta property="og:image" content="http://i2.muimg.com/567571/2c3a0b9bb9b9b544.png">
-<meta property="og:updated_time" content="2017-07-18T03:20:28.923Z">
+<meta property="og:image" content="http://oohnuejim.bkt.clouddn.com/SQL%E6%8A%A5%E9%94%99%E6%B3%A8%E5%85%A5~exp.png">
+<meta property="og:image" content="http://oohnuejim.bkt.clouddn.com/SQL%E6%8A%A5%E9%94%99%E6%B3%A8%E5%85%A5%20%E6%95%B0%E6%8D%AE%E9%87%8D%E5%A4%8D.png">
+<meta property="og:updated_time" content="2018-04-27T08:08:27.096Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="SQL报错注入总结">
 <meta name="twitter:description" content="参考资料：http://www.waitalone.cn/mysql-error-based-injection.htmlhttp://www.111cn.net/database/mysql/47680.htm 一些基本的查基本信息的语句： 查库 (select schema_name from information_schema.schemata limit m,n) 查表 (select">
-<meta name="twitter:image" content="http://i2.muimg.com/567571/348312529bf357fb.png">
+<meta name="twitter:image" content="http://oohnuejim.bkt.clouddn.com/SQL%E6%8A%A5%E9%94%99%E6%B3%A8%E5%85%A51.png">
 
 
 
@@ -407,7 +409,7 @@
 </blockquote>
 <p>此处有三个点，一是需要count计数，二是floor，取得0 or 1，进行数据的重复，三是group by进行分组，但具体原理解释不是很通，大致原理为分组后数据计数时重复造成的错误。也有解释为mysql 的bug 的问题。但是此处需要将rand(0)，rand()需要多试几次才行。</p>
 <p><strong>在sqllab less-5上进行测试</strong></p>
-<p><img src="http://i2.muimg.com/567571/348312529bf357fb.png" alt=""></p>
+<p><img src="http://oohnuejim.bkt.clouddn.com/SQL%E6%8A%A5%E9%94%99%E6%B3%A8%E5%85%A51.png" alt=""></p>
 <p>这里只用user()来做实例，其他爆表，爆字段直接代替user()就行了</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">id=1&apos; union select 1,count(*),concat(0x3a,0x3a,user(),0x3a,0x3a,floor(rand(0)*2))a from information_schema.columns group by a --+</div></pre></td></tr></table></figure>
 <p>可以简化成这样</p>
@@ -422,11 +424,10 @@
 <ul>
 <li>解释下 select 1 from table</li>
 </ul>
-<p>它的作用就是 增加临时列，每行的列值是写在select后的数，这条sql语句中是1<br><img src="http://i2.muimg.com/567571/e60e90caa6f03d2d.png" alt=""></p>
+<p>它的作用就是 增加临时列，每行的列值是写在select后的数，这条sql语句中是1<br><img src="http://oohnuejim.bkt.clouddn.com/SQL%E6%8A%A5%E9%94%99%E6%B3%A8%E5%85%A52%20.png" alt=""></p>
 <ul>
-<li>rand(0) rand(1)和rand()的区别</li>
+<li>rand(0) rand(1)和rand()的区别<br><img src="http://oohnuejim.bkt.clouddn.com/SQL%E6%8A%A5%E9%94%99%E6%B3%A8%E5%85%A5rand%EF%BC%88%EF%BC%89.png" alt=""><br><img src="http://oohnuejim.bkt.clouddn.com/SQL%E6%8A%A5%E9%94%99%E6%B3%A8%E5%85%A5rand%EF%BC%881%EF%BC%89.png" alt=""><br><img src="http://oohnuejim.bkt.clouddn.com/SQL%E6%8A%A5%E9%94%99%E6%B3%A8%E5%85%A5rand%EF%BC%880%EF%BC%89.png" alt=""></li>
 </ul>
-<p><img src="http://i2.muimg.com/567571/29a88425dd842351.png" alt=""></p>
 <p>rand()会随机报错，就是有可能报错，有的时候不会，rand(0)肯定会报错，rand(1)则一定不会报错。<br>所以要让他报错的话直接用rand(0)</p>
 <h3 id="00x2-xpath函数"><a href="#00x2-xpath函数" class="headerlink" title="00x2 xpath函数"></a>00x2 xpath函数</h3><p>如果细究这个会浪费很多时间，而且我目前没怎么接触过XML，所以就简略地介绍下这个函数的用法了。<br>想了解的可以多搜索一些关于xpath注入，这也是sql注入的额一种趋势吧。</p>
 <ul>
@@ -436,14 +437,14 @@
 <p>第一个参数是目标xml，第二个参数是xpath表达式，第三个参数替换目标xml的新的xml。注入中只关心第二个参数就够了。（XPath 是一门在 XML（可扩展标记语言）文档中查找信息的语言。）</p>
 <p>用法：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">updatexml(1,concat(0x3a,(查询内容),0x3a),1)</div></pre></td></tr></table></figure></p>
 <p>在MySQL控制台里面实测下</p>
-<p><img src="http://i2.muimg.com/567571/1d69376a029682e1.png" alt=""></p>
+<p><img src="http://oohnuejim.bkt.clouddn.com/SQL%E6%8A%A5%E9%94%99%E6%B3%A8%E5%85%A5updatexml.png" alt=""></p>
 <ul>
 <li>extractvalue()  最多爆出32位的</li>
 </ul>
 <p>extractvalue方式与updatexml类似，只是extractvalue()中少了第三个参数</p>
 <p>用法：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">extractvalue(1, concat(0x3a, (查询内容),0x3a))</div></pre></td></tr></table></figure>
-<p>在MySQL里实测下<br><img src="http://i2.muimg.com/567571/11177c1b1910f075.png" alt="">  </p>
+<p>在MySQL里实测下<br><img src="http://oohnuejim.bkt.clouddn.com/SQL%E6%8A%A5%E9%94%99%E6%B3%A8%E5%85%A5extract.png" alt="">  </p>
 <p>注意几点，语句出错，想了半天没想明白怎么回事。是union语句连接2个语句的时候，2条语句所在的表形式不同所以返回不了。<br><img src="http://ww4.sinaimg.cn/large/006HJ39wgy1fffdiqh36vj318u0dkajc.jpg" alt=""><br><img src="http://ww4.sinaimg.cn/large/006HJ39wgy1fffdk4awm6j31830dbk0l.jpg" alt=""></p>
 <h3 id="00x3-值类型超出范围导致报错"><a href="#00x3-值类型超出范围导致报错" class="headerlink" title="00x3 值类型超出范围导致报错"></a>00x3 值类型超出范围导致报错</h3><p>在MySQL版本大于等于5.5.5的的时候才能用户</p>
 <ul>
@@ -453,14 +454,14 @@
 <p>用法：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">select exp(~(select*from(select user())x))</div></pre></td></tr></table></figure>
 <p>报错具体原理<a href="http://www.cnblogs.com/lcamry/articles/5509124.html" target="_blank" rel="external">http://www.cnblogs.com/lcamry/articles/5509124.html</a></p>
-<p><img src="http://i2.muimg.com/567571/677277689e425d96.png" alt=""></p>
+<p><img src="http://oohnuejim.bkt.clouddn.com/SQL%E6%8A%A5%E9%94%99%E6%B3%A8%E5%85%A5~exp.png" alt=""></p>
 <ul>
 <li>bigint超出范围</li>
 </ul>
 <p>具体原理<a href="http://www.cnblogs.com/lcamry/articles/5509112.html" target="_blank" rel="external">http://www.cnblogs.com/lcamry/articles/5509112.html</a><br>跟上面的差不多。</p>
 <h3 id="00x4-利用数据重复性"><a href="#00x4-利用数据重复性" class="headerlink" title="00x4 利用数据重复性"></a>00x4 利用数据重复性</h3><p>用法：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">select * from (select NAME_CONST(version(),1),NAME_CONST(version(),1))x</div></pre></td></tr></table></figure></p>
-<p>这里的version(0出现了2次，所以报错。</p>
-<p><img src="http://i2.muimg.com/567571/2c3a0b9bb9b9b544.png" alt=""></p>
+<p>这里的version()出现了2次，所以报错。</p>
+<p><img src="http://oohnuejim.bkt.clouddn.com/SQL%E6%8A%A5%E9%94%99%E6%B3%A8%E5%85%A5%20%E6%95%B0%E6%8D%AE%E9%87%8D%E5%A4%8D.png" alt=""></p>
 
       
     </div>
@@ -604,7 +605,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">16</span>
+                <span class="site-state-item-count">17</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -626,7 +627,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">11</span>
+                <span class="site-state-item-count">12</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
@@ -726,7 +727,7 @@
 <div class="copyright" >
   
   &copy; 
-  <span itemprop="copyrightYear">2017</span>
+  <span itemprop="copyrightYear">2018</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>

